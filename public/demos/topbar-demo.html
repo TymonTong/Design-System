@@ -32,24 +32,11 @@
       align-items: center;
     }
 
-    /* 折叠按钮：使用 type="primary" text，避开全局"非 primary 文字按钮"hover 规则的干扰
-       <style> 标签比 <link> 晚加载，同特异性时此处规则胜出 */
-    .app-collapse-btn.el-button--primary.is-text {
+    /* 折叠按钮：次级文字按钮（<el-button text>），颜色规则由 el-plus-theme.css 统一控制 */
+    .app-collapse-btn.el-button--text {
       padding: 0 8px !important;
       gap: 6px;
       font-size: 13px;
-      color: var(--el-color-text-700) !important;   /* 默认：灰色 */
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-    }
-    .app-collapse-btn.el-button--primary.is-text:hover {
-      color: var(--el-color-primary-600) !important; /* hover：主色 */
-      background: transparent !important;
-    }
-    .app-collapse-btn.el-button--primary.is-text:active {
-      color: var(--el-color-primary-700) !important; /* active：深主色 */
-      background: transparent !important;
     }
 
     /* 竖向分割线 */
@@ -143,7 +130,7 @@
 
           <!-- 左侧：折叠按钮 + 分割线 + 面包屑 -->
           <div class="app-topbar__left">
-            <el-button type="primary" text class="app-collapse-btn" @click="collapsed = !collapsed">
+            <el-button text class="app-collapse-btn" @click="collapsed = !collapsed">
               <el-icon><component :is="collapsed ? 'DArrowRight' : 'DArrowLeft'" /></el-icon>
               <span>{{ collapsed ? '展开' : '收起' }}</span>
             </el-button>

@@ -16,23 +16,11 @@
       gap: 12px;
       margin-bottom: 16px;
     }
-    /* 折叠按钮（同 topbar-demo.html，type="primary" text 绕开全局非 primary 规则） */
-    .app-collapse-btn.el-button--primary.is-text {
+    /* 折叠按钮：次级文字按钮（<el-button text>），颜色规则由 el-plus-theme.css 统一控制 */
+    .app-collapse-btn.el-button--text {
       padding: 0 8px !important;
       gap: 6px;
       font-size: 13px;
-      color: var(--el-color-text-700) !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-    }
-    .app-collapse-btn.el-button--primary.is-text:hover {
-      color: var(--el-color-primary-600) !important;
-      background: transparent !important;
-    }
-    .app-collapse-btn.el-button--primary.is-text:active {
-      color: var(--el-color-primary-700) !important;
-      background: transparent !important;
     }
 
     /* 演示容器：灰色背景模拟页面布局 */
@@ -143,7 +131,7 @@
       template: `
         <div>
           <div class="demo-controls">
-            <el-button type="primary" text class="app-collapse-btn" @click="collapsed = !collapsed">
+            <el-button text class="app-collapse-btn" @click="collapsed = !collapsed">
               <el-icon><component :is="collapsed ? 'DArrowRight' : 'DArrowLeft'" /></el-icon>
               <span>{{ collapsed ? '展开' : '收起' }}</span>
             </el-button>
@@ -174,6 +162,7 @@
               <el-menu
                 :default-active="activeIndex"
                 :collapse="collapsed"
+                :style="collapsed ? 'width:80px' : 'width:240px'"
                 class="app-sidebar__menu"
                 @select="val => activeIndex = val"
               >

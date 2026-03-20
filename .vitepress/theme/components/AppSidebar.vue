@@ -150,6 +150,7 @@ const activeIndex = ref('s1-2-1')
   object-fit: contain;
 }
 /* 菜单撑满剩余空间，无右侧边框，无顶部分割线 */
+/* 折叠宽度已在 el-plus-theme.css 全局统一为 80px */
 .app-sidebar__menu.el-menu {
   flex: 1;
   overflow-y: auto;

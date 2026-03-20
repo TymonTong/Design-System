@@ -186,17 +186,16 @@
 .el-button.is-text:not(.el-button--primary):not(.is-disabled):hover  { color: var(--el-color-text-700)  !important; }
 .el-button.is-text:not(.el-button--primary):not(.is-disabled):active { color: var(--el-color-text-1000) !important; }
 
-/* 折叠/展开按钮专用（type="primary" text）：默认灰色，hover/active 变主色
-   在 demo <style> 中以相同特异性覆盖，此处仅作 Vue 组件环境的备用兜底 */
-.app-collapse-btn.el-button--primary.is-text {
+/* 折叠/展开按钮专用（<el-button text> 次级文字按钮）：默认灰色，hover/active 变主色 */
+.app-collapse-btn.el-button--text {
   color: var(--el-color-text-700) !important;
   background: transparent !important;
 }
-.app-collapse-btn.el-button--primary.is-text:hover {
+.app-collapse-btn.el-button--text:hover {
   color: var(--el-color-primary-600) !important;
   background: transparent !important;
 }
-.app-collapse-btn.el-button--primary.is-text:active {
+.app-collapse-btn.el-button--text:active {
   color: var(--el-color-primary-700) !important;
   background: transparent !important;
 }
@@ -354,7 +353,10 @@
 .el-menu:not(.el-menu--collapse) .el-menu--inline .el-menu--inline > .el-sub-menu > .el-sub-menu__title {
   padding-left: 64px !important;
 }
-/* 收起状态 */
+/* 收起状态：折叠宽度统一 80px（Element Plus 默认 64px，此处覆盖） */
+.el-menu--collapse {
+  width: 80px !important;
+}
 .el-menu--collapse .el-menu-item {
   padding: 0 !important;
   justify-content: center !important;

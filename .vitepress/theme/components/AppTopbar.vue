@@ -2,7 +2,7 @@
   <div class="app-topbar">
     <!-- 左侧：折叠按钮 + 分割线 + 面包屑 -->
     <div class="app-topbar__left">
-      <el-button type="primary" text class="app-topbar__collapse-btn app-collapse-btn" @click="toggleCollapse">
+      <el-button text class="app-topbar__collapse-btn app-collapse-btn" @click="toggleCollapse">
         <el-icon><component :is="collapsed ? DArrowRight : DArrowLeft" /></el-icon>
         <span>{{ collapsed ? '展开' : '收起' }}</span>
       </el-button>
