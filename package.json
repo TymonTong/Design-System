@@ -9,6 +9,7 @@
     "docs:preview": "vitepress preview"
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "vitepress": "^1.6.3"
   },
   "dependencies": {

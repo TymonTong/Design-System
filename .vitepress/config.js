@@ -22,6 +22,7 @@ export default defineConfig({
       { text: '基础规范', link: '/colors' },
       { text: '全局布局组件', link: '/instances/sidebar-instance' },
       { text: '组件规范', link: '/components/button' },
+      { text: '⬇ 交付包下载', link: '/download' },
     ],
 
     sidebar: [
