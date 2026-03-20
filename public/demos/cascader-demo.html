@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .sub-label { font-size: 12px; color: var(--el-color-text-700); margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const val1 = ref(null)
+        const val2 = ref(null)
+        const val3 = ref(null)
+        const val4 = ref(null)
+        const val5 = ref([])
+        const val6 = ref([])
+
+        const regionOptions = [
+          { value: 'beijing', label: '北京市', children: [
+            { value: 'chaoyang', label: '朝阳区' },
+            { value: 'haidian',  label: '海淀区' },
+            { value: 'dongcheng',label: '东城区' },
+          ]},
+          { value: 'shanghai', label: '上海市', children: [
+            { value: 'huangpu', label: '黄浦区' },
+            { value: 'xuhui',   label: '徐汇区' },
+            { value: 'jing_an', label: '静安区' },
+          ]},
+          { value: 'guangdong', label: '广东省', children: [
+            { value: 'guangzhou', label: '广州市', children: [
+              { value: 'tianhe', label: '天河区' },
+              { value: 'yuexiu', label: '越秀区' },
+            ]},
+            { value: 'shenzhen', label: '深圳市', children: [
+              { value: 'nanshan', label: '南山区' },
+              { value: 'futian',  label: '福田区' },
+            ]},
+          ]},
+        ]
+
+        const categoryOptions = [
+          { value: 'electronics', label: '电子产品', children: [
+            { value: 'phone',  label: '手机' },
+            { value: 'laptop', label: '笔记本' },
+            { value: 'tablet', label: '平板' },
+          ]},
+          { value: 'clothing', label: '服装', children: [
+            { value: 'mens',   label: '男装' },
+            { value: 'womens', label: '女装' },
+            { value: 'kids',   label: '童装' },
+          ]},
+          { value: 'food', label: '食品', children: [
+            { value: 'fresh', label: '生鲜' },
+            { value: 'snack', label: '零食' },
+          ]},
+        ]
+
+        return { val1, val2, val3, val4, val5, val6, regionOptions, categoryOptions }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础级联选择器</p>
+            <el-cascader v-model="val1" :options="regionOptions" placeholder="请选择省市区" style="width:280px;" />
+            <p class="demo-label">基础用法，逐级点击展开，选中最末级后自动关闭面板。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可搜索</p>
+            <el-cascader v-model="val2" :options="regionOptions" filterable placeholder="输入关键词搜索" style="width:280px;" />
+            <p class="demo-label">filterable 可搜索，在下拉面板中过滤匹配所有层级的选项。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可清空</p>
+            <el-cascader v-model="val3" :options="categoryOptions" clearable placeholder="请选择商品分类" style="width:280px;" />
+            <p class="demo-label">clearable 可清空，选中内容后悬浮于选择器上可看到 × 清空按钮。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">禁用状态</p>
+            <el-cascader v-model="val4" :options="regionOptions" disabled placeholder="禁用状态" style="width:280px;" />
+            <p class="demo-label">disabled 禁用态，背景变为 --el-color-text-100，不可操作。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">多选</p>
+            <div style="margin-bottom:16px;">
+              <p class="sub-label">展开模式（全部 Tag 显示）</p>
+              <el-cascader v-model="val5" :options="regionOptions" :props="{ multiple: true }" clearable placeholder="请选择（可多选）" style="width:360px;" />
+            </div>
+            <div>
+              <p class="sub-label">折叠模式（超出折叠为 +N）</p>
+              <el-cascader v-model="val6" :options="regionOptions" :props="{ multiple: true }" collapse-tags collapse-tags-tooltip clearable placeholder="请选择（可多选）" style="width:360px;" />
+            </div>
+            <p class="demo-label">通过 :props="{ multiple: true }" 开启多选。展开模式全部显示 Tag；折叠模式高度固定。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">仅显示最后一级</p>
+            <div style="display:flex; gap:24px; flex-wrap:wrap;">
+              <div>
+                <p class="sub-label">显示完整路径（默认）</p>
+                <el-cascader v-model="val1" :options="regionOptions" placeholder="请选择" style="width:240px;" />
+              </div>
+              <div>
+                <p class="sub-label">仅显示最后一级</p>
+                <el-cascader v-model="val1" :options="regionOptions" :show-all-levels="false" placeholder="请选择" style="width:160px;" />
+              </div>
+            </div>
+            <p class="demo-label">两个选择器共用同一份选中数据。右侧仅显示最末级，适合宽度受限场景。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

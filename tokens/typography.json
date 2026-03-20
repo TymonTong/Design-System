@@ -1,0 +1,97 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "B端产品设计规范 · 字体 Token",
+  "typography": {
+    "fontFamily": {
+      "$value": "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      "$type": "fontFamily",
+      "$description": "系统默认字体栈，无需加载字体文件，在 macOS、Windows 均有良好渲染"
+    },
+    "fontSize": {
+      "s1": {
+        "$value": "12px",
+        "$type": "fontSize",
+        "$description": "辅助说明、标注文字、图表标签",
+        "cssVar": "--el-font-size-extra-small",
+        "lineHeight": "16px"
+      },
+      "b2": {
+        "$value": "13px",
+        "$type": "fontSize",
+        "$description": "小号正文、表格内容、次级操作",
+        "cssVar": "--el-font-size-small",
+        "lineHeight": "20px"
+      },
+      "b1": {
+        "$value": "14px",
+        "$type": "fontSize",
+        "$description": "标准正文，最高频使用字号",
+        "cssVar": "--el-font-size-base",
+        "lineHeight": "22px"
+      },
+      "h3": {
+        "$value": "16px",
+        "$type": "fontSize",
+        "$description": "小标题、卡片标题、模块标题",
+        "cssVar": "--el-font-size-medium",
+        "lineHeight": "24px"
+      },
+      "h2": {
+        "$value": "18px",
+        "$type": "fontSize",
+        "$description": "中等标题、区块标题",
+        "cssVar": "--el-font-size-large",
+        "lineHeight": "26px"
+      },
+      "h1": {
+        "$value": "20px",
+        "$type": "fontSize",
+        "$description": "页面主标题",
+        "cssVar": "--el-font-size-extra-large",
+        "lineHeight": "28px"
+      },
+      "display-s": {
+        "$value": "24px",
+        "$type": "fontSize",
+        "$description": "特殊展示，数字大标题、看板数据"
+      },
+      "display-m": {
+        "$value": "32px",
+        "$type": "fontSize",
+        "$description": "特殊展示，大数字"
+      },
+      "display-l": {
+        "$value": "40px",
+        "$type": "fontSize",
+        "$description": "特殊展示，超大数字"
+      },
+      "display-xl": {
+        "$value": "48px",
+        "$type": "fontSize",
+        "$description": "特殊展示，极大数字"
+      }
+    },
+    "fontWeight": {
+      "regular": {
+        "$value": "400",
+        "$type": "fontWeight",
+        "$description": "常规体，用于正文"
+      },
+      "medium": {
+        "$value": "500",
+        "$type": "fontWeight",
+        "$description": "中等粗，用于标题、强调"
+      },
+      "bold": {
+        "$value": "700",
+        "$type": "fontWeight",
+        "$description": "粗体，用于大标题、数据展示"
+      }
+    },
+    "lineHeight": {
+      "tight":   { "$value": "1.3", "$type": "lineHeight" },
+      "normal":  { "$value": "1.5", "$type": "lineHeight", "$description": "正文推荐行高" },
+      "relaxed": { "$value": "1.75", "$type": "lineHeight" }
+    }
+  }
+}

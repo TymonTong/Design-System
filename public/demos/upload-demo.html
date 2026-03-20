@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref, onMounted } = Vue
+    const app = createApp({
+      setup() {
+        const fileList1 = ref([])
+        const fileList2 = ref([])
+        const fileList3 = ref([
+          { name: 'example.jpg', url: '' },
+          { name: 'report.pdf', url: '' },
+        ])
+
+        const customIconSrc = ref('')
+        const customIconFailed = ref(false)
+
+        onMounted(() => {
+          customIconSrc.value = '/upload-icon/icon.png'
+        })
+
+        function handleIconError() {
+          customIconFailed.value = true
+        }
+
+        function mockRequest({ onSuccess }) {
+          setTimeout(() => onSuccess('ok'), 800)
+        }
+
+        function handleExceed(files) {
+          ElementPlus.ElMessage.warning(`最多上传 3 个文件，已超出 ${files.length} 个`)
+        }
+
+        return { fileList1, fileList2, fileList3, customIconSrc, customIconFailed, handleIconError, mockRequest, handleExceed }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">拖拽上传</p>
+            <el-upload
+              drag
+              :http-request="mockRequest"
+              :on-exceed="handleExceed"
+              :limit="3"
+              v-model:file-list="fileList1"
+              accept=".jpg,.jpeg,.png"
+            >
+              <img
+                v-if="customIconSrc && !customIconFailed"
+                :src="customIconSrc"
+                @error="handleIconError"
+                style="width:64px; height:64px; object-fit:contain; margin-bottom:8px;"
+              />
+              <el-icon v-else class="el-icon--upload" style="font-size:64px; color:var(--el-color-text-600); margin-bottom:8px;">
+                <UploadFilled />
+              </el-icon>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <template #tip>
+                <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
+              </template>
+            </el-upload>
+            <p class="demo-label">drag 属性启用拖拽，拖入时边框高亮为主色。文件上传后显示在下方文件列表。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">点击上传（普通模式）</p>
+            <el-upload :http-request="mockRequest" v-model:file-list="fileList2" :limit="5" accept=".jpg,.jpeg,.png,.pdf">
+              <el-button type="primary">点击上传</el-button>
+              <template #tip>
+                <div class="el-upload__tip">支持 jpg / png / pdf，单个文件不超过 10MB</div>
+              </template>
+            </el-upload>
+            <p class="demo-label">普通点击上传，触发按钮可自由替换为任意 Element Plus 按钮样式。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">已上传文件列表</p>
+            <el-upload :http-request="mockRequest" v-model:file-list="fileList3">
+              <el-button type="primary">继续上传</el-button>
+            </el-upload>
+            <p class="demo-label">file-list 预设两个已上传文件，鼠标悬浮可看到删除按钮（×）。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

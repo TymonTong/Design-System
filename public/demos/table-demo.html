@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--el-font-family);
+      font-size: 14px;
+      color: var(--el-color-text-800);
+      padding: 24px;
+      background: transparent;
+    }
+    .demo-label { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .demo-section + .demo-section { margin-top: 32px; }
+    .demo-note { margin-top: 8px; font-size: 13px; color: var(--el-color-text-700); }
+    /* 按钮后跟 el-dropdown 时补充 12px 间距（el-dropdown 不是 el-button，全局规则无法命中） */
+    .tbl-actions .el-button + .el-dropdown { margin-left: 12px !important; }
+  </style>
+</head>
+<body>
+  <!-- 空挂载点：模板通过字符串传入，避免 DOM 模板模式对 scoped slot 的限制 -->
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+
+    const app = createApp({
+      setup() {
+        const tableData = [
+          { date: '2016-05-03', name: 'Tom',   dept: '产品部', role: '产品经理',   address: 'No. 189, Grove St, Los Angeles' },
+          { date: '2016-05-02', name: 'Jack',  dept: '技术部', role: '开发工程师', address: 'No. 189, Grove St, Los Angeles' },
+          { date: '2016-05-04', name: 'Alice', dept: '设计部', role: 'UI 设计师',  address: 'No. 189, Grove St, Los Angeles' },
+          { date: '2016-05-01', name: 'Bob',   dept: '运营部', role: '运营专员',   address: 'No. 189, Grove St, Los Angeles' },
+        ]
+        const selected = ref([])
+        const handleAction = (action, row) => {
+          ElementPlus.ElMessage.info(`${action}：${row.name}`)
+        }
+        return { tableData, selected, handleAction }
+      },
+
+      // 字符串模板：Vue CDN 包含编译器，支持完整 slot 语法（包括 scoped slot）
+      template: `
+        <div>
+
+          <!-- 基础表格 -->
+          <div class="demo-section">
+            <p class="demo-label">基础表格</p>
+            <div class="table-container">
+              <el-table :data="tableData" style="width:100%">
+                <el-table-column prop="date"    label="日期"  width="130" />
+                <el-table-column prop="name"    label="姓名"  width="100" />
+                <el-table-column prop="dept"    label="部门"  width="120" />
+                <el-table-column prop="address" label="地址" />
+                <el-table-column label="操作" width="220" align="left">
+                  <template #default="{ row }">
+                    <div class="tbl-actions">
+                      <el-button type="primary" text @click="handleAction('编辑', row)">编辑</el-button>
+                      <el-button text @click="handleAction('管理具体信息', row)">管理具体信息</el-button>
+                      <el-dropdown trigger="click" placement="bottom-end" @command="cmd => handleAction(cmd, row)">
+                        <el-button text>
+                          <span>更多</span>
+                          <el-icon style="font-size:12px;"><arrow-down /></el-icon>
+                        </el-button>
+                        <template #dropdown>
+                          <el-dropdown-menu>
+                            <el-dropdown-item command="上传">上传</el-dropdown-item>
+                            <el-dropdown-item command="安装">安装</el-dropdown-item>
+                            <el-dropdown-item command="删除" style="color:var(--el-color-danger-400);">删除</el-dropdown-item>
+                          </el-dropdown-menu>
+                        </template>
+                      </el-dropdown>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+
+          <!-- 固定首尾列 · 横向滚动 -->
+          <div class="demo-section">
+            <p class="demo-label">固定首尾列 · 横向滚动</p>
+            <div class="table-container" style="max-width:680px;">
+              <el-table :data="tableData" style="width:100%" @selection-change="val => selected = val">
+                <el-table-column type="selection" width="52"  fixed="left" />
+                <el-table-column prop="date"    label="日期"     width="130" fixed="left" />
+                <el-table-column prop="name"    label="姓名"     width="120" />
+                <el-table-column prop="dept"    label="所属部门" width="140" />
+                <el-table-column prop="role"    label="职位角色" width="160" />
+                <el-table-column prop="address" label="地址"     min-width="220" />
+                <el-table-column label="操作" width="220" fixed="right">
+                  <template #default="{ row }">
+                    <div class="tbl-actions">
+                      <el-button type="primary" text @click="handleAction('编辑', row)">编辑</el-button>
+                      <el-button text @click="handleAction('管理具体信息', row)">管理具体信息</el-button>
+                      <el-dropdown trigger="click" placement="bottom-end" @command="cmd => handleAction(cmd, row)">
+                        <el-button text>
+                          <span>更多</span>
+                          <el-icon style="font-size:12px;"><arrow-down /></el-icon>
+                        </el-button>
+                        <template #dropdown>
+                          <el-dropdown-menu>
+                            <el-dropdown-item command="上传">上传</el-dropdown-item>
+                            <el-dropdown-item command="安装">安装</el-dropdown-item>
+                            <el-dropdown-item command="删除" style="color:var(--el-color-danger-400);">删除</el-dropdown-item>
+                          </el-dropdown-menu>
+                        </template>
+                      </el-dropdown>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <p class="demo-note">已选中 {{ selected.length }} 条 · 首尾列固定，中间列可横向滚动</p>
+          </div>
+
+        </div>
+      `
+    })
+
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+
+    window.addEventListener('load', () => {
+      parent.postMessage({ height: document.body.scrollHeight }, '*')
+    })
+  </script>
+</body>
+</html>

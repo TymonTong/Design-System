@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 16px 20px 24px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+
+    .input-error {
+      --el-input-border-color: var(--el-color-danger-400) !important;
+      --el-input-focus-border-color: var(--el-color-danger-400) !important;
+      --el-input-hover-border-color: var(--el-color-danger-400) !important;
+    }
+    .input-success {
+      --el-input-border-color: var(--el-color-success-400) !important;
+      --el-input-focus-border-color: var(--el-color-success-400) !important;
+      --el-input-hover-border-color: var(--el-color-success-400) !important;
+    }
+    .select-error .el-input__wrapper {
+      box-shadow: 0 0 0 1px var(--el-color-danger-400) inset !important;
+    }
+    .form-hint {
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--el-color-text-700);
+      margin-top: 4px;
+    }
+
+    .demo-section { margin-bottom: 40px; }
+    .demo-section h3 { font-size: 15px; font-weight: 600; color: var(--el-color-text-1000); margin: 0 0 4px; }
+    .demo-section p  { font-size: 13px; color: var(--el-color-text-700); margin: 0 0 12px; }
+    .demo-label      { font-size: 12px; color: var(--el-color-text-700); margin-top: 10px; padding: 8px 12px; background: var(--el-color-text-100); border-radius: 4px; }
+    .section-divider { border: none; border-top: 1px solid var(--el-color-text-300); margin: 12px 0 32px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref, reactive } = Vue
+
+    const app = createApp({
+      setup() {
+        // 标准表单
+        const stdFormRef = ref(null)
+        const stdForm = reactive({ name: '', region: '', desc: '', status: true })
+        const stdRules = {
+          name:   [{ required: true, message: '请输入名称', trigger: 'blur' }],
+          region: [{ required: true, message: '请选择区域', trigger: 'change' }]
+        }
+        const regionOptions = [
+          { label: '华东区', value: 'east' },
+          { label: '华南区', value: 'south' },
+          { label: '华北区', value: 'north' },
+          { label: '西南区', value: 'west' }
+        ]
+        function submitStd() { stdFormRef.value?.validate() }
+        function resetStd()  { stdFormRef.value?.resetFields() }
+
+        // 行内表单
+        const inlineForm = reactive({ name: '', region: '' })
+
+        // 复杂表单
+        const complexFormRef = ref(null)
+        const complexForm = reactive({
+          taskName: '', links: [{ url: '' }],
+          duration: '', actions: [], copyType: '', startTime: '', interval: ''
+        })
+        const complexRules = {
+          taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
+          copyType: [{ required: true, message: '请选择文案', trigger: 'change' }]
+        }
+        const copyOptions = [
+          { label: '默认文案', value: 'default' },
+          { label: '自定义文案', value: 'custom' },
+          { label: '随机文案', value: 'random' }
+        ]
+        function addLink()       { if (complexForm.links.length < 10) complexForm.links.push({ url: '' }) }
+        function removeLink(idx) { complexForm.links.splice(idx, 1) }
+        function submitComplex() { complexFormRef.value?.validate() }
+        function resetComplex()  { complexFormRef.value?.resetFields(); complexForm.links = [{ url: '' }] }
+
+        return {
+          stdFormRef, stdForm, stdRules, regionOptions, submitStd, resetStd,
+          inlineForm,
+          complexFormRef, complexForm, complexRules, copyOptions,
+          addLink, removeLink, submitComplex, resetComplex
+        }
+      },
+      template: `
+        <div>
+
+          <!-- ═══ 标准表单 ═══ -->
+          <div class="demo-section">
+            <h3>标准表单</h3>
+            <p>竖排表单，表单项间距 16px，label-width 按最长字段设定，按钮组左对齐。</p>
+            <div style="padding:24px; background:#fff; border:1px solid var(--el-color-text-300); border-radius:8px;">
+              <el-form ref="stdFormRef" :model="stdForm" :rules="stdRules" label-width="80px" label-position="right" style="max-width:480px;">
+                <el-form-item label="名称" prop="name">
+                  <el-input v-model="stdForm.name" placeholder="请输入名称" />
+                </el-form-item>
+                <el-form-item label="所属区域" prop="region">
+                  <el-select v-model="stdForm.region" placeholder="请选择区域" style="width:100%;">
+                    <el-option v-for="o in regionOptions" :key="o.value" :label="o.label" :value="o.value" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="描述">
+                  <el-input v-model="stdForm.desc" type="textarea" :rows="3" placeholder="请输入描述（选填）" />
+                </el-form-item>
+                <el-form-item label="启用">
+                  <el-switch v-model="stdForm.status" />
+                </el-form-item>
+                <el-form-item style="margin-top:24px; margin-bottom:0;">
+                  <el-button type="primary" @click="submitStd">提交</el-button>
+                  <el-button @click="resetStd">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="demo-label">标准竖排表单。表单项间距 16px，按钮组与表单间距 24px，label-width 按最长字段设定，按钮组左对齐（与输入框齐）。</div>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- ═══ 行内表单 ═══ -->
+          <div class="demo-section">
+            <h3>行内表单（搜索区）</h3>
+            <p>适合表格页顶部搜索区，label 与输入框保持 12px 间距。</p>
+            <div style="padding:16px 24px; background:#fff; border:1px solid var(--el-color-text-300); border-radius:8px;">
+              <el-form :model="inlineForm" inline>
+                <el-form-item label="名称">
+                  <el-input v-model="inlineForm.name" placeholder="请输入名称" style="width:200px;" />
+                </el-form-item>
+                <el-form-item label="区域">
+                  <el-select v-model="inlineForm.region" placeholder="请选择" style="width:160px;">
+                    <el-option v-for="o in regionOptions" :key="o.value" :label="o.label" :value="o.value" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary">查询</el-button>
+                  <el-button>重置</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="demo-label">inline 行内表单，适合表格页顶部搜索区，label 与输入框保持 12px 间距。</div>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- ═══ 表单校验状态 ═══ -->
+          <div class="demo-section">
+            <h3>表单校验状态</h3>
+            <p>错误提示紧贴输入框（间距 0），成功状态用绿色，字号 12px。</p>
+            <div style="padding:24px; background:#fff; border:1px solid var(--el-color-text-300); border-radius:8px;">
+              <el-form label-width="80px" label-position="right" style="max-width:480px;">
+                <el-form-item label="邮箱">
+                  <el-input placeholder="请输入邮箱" model-value="" class="input-error" />
+                  <div style="font-size:12px; line-height:16px; color:var(--el-color-danger-400);">邮箱地址不能为空</div>
+                </el-form-item>
+                <el-form-item label="手机号">
+                  <el-input placeholder="请输入手机号" model-value="138" class="input-error" />
+                  <div style="font-size:12px; line-height:16px; color:var(--el-color-danger-400);">请输入有效的11位手机号</div>
+                </el-form-item>
+                <el-form-item label="验证码">
+                  <el-input placeholder="6位验证码" model-value="123456" class="input-success" />
+                  <div style="font-size:12px; line-height:16px; color:var(--el-color-success-400);">验证码正确</div>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="demo-label">校验提示紧贴输入框（gap 为 0），错误用 --el-color-danger-400，成功用 --el-color-success-400，字号 12px。</div>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- ═══ 复杂表单 ═══ -->
+          <div class="demo-section">
+            <h3>复杂表单（综合案例）</h3>
+            <p>包含可重复添加的行、补充说明文案、校验错误状态、多选框、日期时间选择器。label-width 按最长字段「同账号任务间隔」适配为 112px。</p>
+            <div style="padding:24px; background:#fff; border:1px solid var(--el-color-text-300); border-radius:8px;">
+              <el-form ref="complexFormRef" :model="complexForm" :rules="complexRules" label-width="112px" label-position="right" style="max-width:560px;">
+                <el-form-item label="任务名称" prop="taskName">
+                  <el-input v-model="complexForm.taskName" placeholder="请输入" />
+                </el-form-item>
+                <el-form-item label="作品链接">
+                  <div style="width:100%;">
+                    <div v-for="(link, idx) in complexForm.links" :key="idx"
+                         style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+                      <el-input v-model="link.url" placeholder="请输入" style="flex:1;" />
+                      <el-button type="primary" text :disabled="complexForm.links.length <= 1" @click="removeLink(idx)">删除</el-button>
+                    </div>
+                    <div>
+                      <el-button :disabled="complexForm.links.length >= 10" @click="addLink">添加链接</el-button>
+                      <div class="form-hint">至多可添加 10 条作品链接</div>
+                    </div>
+                  </div>
+                </el-form-item>
+                <el-form-item label="观看/停留时长">
+                  <div style="width:100%;">
+                    <el-input v-model="complexForm.duration" placeholder="请输入（秒）" />
+                    <div class="form-hint">停留该时长后再执行互动，避免无完播即点赞触发风控</div>
+                  </div>
+                </el-form-item>
+                <el-form-item label="执行动作">
+                  <el-checkbox-group v-model="complexForm.actions">
+                    <el-checkbox value="like">点赞</el-checkbox>
+                    <el-checkbox value="comment">评论</el-checkbox>
+                    <el-checkbox value="share">转发</el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>
+                <el-form-item label="文案" prop="copyType">
+                  <el-select v-model="complexForm.copyType" placeholder="请选择" class="select-error" style="width:100%;">
+                    <el-option v-for="o in copyOptions" :key="o.value" :label="o.label" :value="o.value" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="开始时间">
+                  <div style="width:100%;">
+                    <el-date-picker v-model="complexForm.startTime" type="datetime" placeholder="选择开始时间" style="width:100%;" />
+                    <div class="form-hint">系统将在该时间开始执行任务</div>
+                  </div>
+                </el-form-item>
+                <el-form-item label="同账号任务间隔">
+                  <div style="width:100%;">
+                    <el-input v-model="complexForm.interval" placeholder="请输入（秒）" />
+                    <div class="form-hint">同账号对多个作品执行互动时，两次任务之间的随机时间间隔，降低风控。范围 30–600s。</div>
+                  </div>
+                </el-form-item>
+                <el-form-item style="margin-top:24px; margin-bottom:0;">
+                  <el-button type="primary" @click="submitComplex">提交</el-button>
+                  <el-button @click="resetComplex">取消</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="demo-label">复杂业务表单综合案例。label-width 按最长字段「同账号任务间隔」适配为 112px；补充说明文案占高度（gap 4px）；校验提示不占高度（gap 0）；按钮组 margin-top 24px。</div>
+          </div>
+
+        </div>
+      `
+    })
+
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>

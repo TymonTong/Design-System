@@ -1,0 +1,54 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "B端产品设计规范 · 间距 Token · 基于 4px 基础单位，共 6 档标准间距",
+  "spacing": {
+    "0":  { "$value": "0px",  "$type": "spacing", "$description": "无间距：组件内部完全贴合，消除间隙（如收起侧边栏图标居中）" },
+    "1":  { "$value": "4px",  "$type": "spacing", "$description": "极小间距：极紧凑的行内元素（如 Tag 横向内边距）" },
+    "2":  { "$value": "8px",  "$type": "spacing", "$description": "小间距：同一组件内部元素（按钮内图标与文字、Checkbox 方框与标签文字）" },
+    "3":  { "$value": "12px", "$type": "spacing", "$description": "基准间距：并排按钮之间（按钮组间距）、表格单元格上下 padding、菜单项左侧 padding" },
+    "4":  { "$value": "16px", "$type": "spacing", "$description": "标准间距：同一区块内部（组内元素行距）、表格单元格左右 padding、卡片内各行之间" },
+    "6":  { "$value": "24px", "$type": "spacing", "$description": "大间距：不同功能区块之间（表单项上下、页面内容区左右内边距、区块分隔）" }
+  },
+  "layout": {
+    "pageHorizontalPadding": {
+      "$value": "24px",
+      "$type": "spacing",
+      "$description": "页面内容区左右内边距"
+    },
+    "pageVerticalPadding": {
+      "$value": "16px",
+      "$type": "spacing",
+      "$description": "页面内容区上下内边距"
+    },
+    "formItemGap": {
+      "$value": "24px",
+      "$type": "spacing",
+      "$description": "上下相邻表单项之间的间距"
+    },
+    "tableCellPadding": {
+      "$value": "12px 16px",
+      "$type": "spacing",
+      "$description": "表格单元格 padding（上下 12px，左右 16px）"
+    },
+    "buttonGroupGap": {
+      "$value": "12px",
+      "$type": "spacing",
+      "$description": "按钮组内按钮与按钮之间的间距"
+    },
+    "buttonIconGap": {
+      "$value": "8px",
+      "$type": "spacing",
+      "$description": "按钮内图标与文字之间的间距"
+    }
+  },
+  "componentSize": {
+    "large":    { "$value": "40px", "$type": "sizing", "$description": "大号组件高度，页面主搜索框" },
+    "default":  { "$value": "36px", "$type": "sizing", "$description": "默认组件高度，常规表单控件" },
+    "small":    { "$value": "28px", "$type": "sizing", "$description": "小号组件高度，表格内操作控件" },
+    "tableHeader": { "$value": "48px", "$type": "sizing", "$description": "表格表头行高" },
+    "tableRow":    { "$value": "64px", "$type": "sizing", "$description": "表格数据行高" },
+    "sidebarWidth": { "$value": "240px", "$type": "sizing", "$description": "侧边栏展开宽度" },
+    "sidebarCollapsed": { "$value": "80px", "$type": "sizing", "$description": "侧边栏折叠宽度" },
+    "headerHeight": { "$value": "56px", "$type": "sizing", "$description": "顶部导航栏高度" }
+  }
+}

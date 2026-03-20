@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; padding: 20px; background: var(--el-color-text-100); border-radius: 6px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 12px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    /* 无返回变体：隐藏返回按钮和分割线 */
+    .ph-no-back .el-page-header__back,
+    .ph-no-back .el-page-header__left .el-divider--vertical { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp } = Vue
+    const app = createApp({
+      setup() { return {} },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">可返回</p>
+            <el-page-header @back="() => {}" title="返回" content="页面标题" />
+            <p class="demo-label">含返回按钮，点击可导航回上一页。返回按钮文字统一使用「返回」。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可返回 · 带操作区</p>
+            <el-page-header @back="() => {}" title="返回" content="订单详情">
+              <template #extra>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <el-button type="primary">保存</el-button>
+                  <el-button>编辑</el-button>
+                </div>
+              </template>
+            </el-page-header>
+            <p class="demo-label">操作按钮组：主色按钮在左，按钮间距 12px。</p>
+          </div>
+          <div class="demo-section ph-no-back">
+            <p class="demo-title">无返回</p>
+            <el-page-header content="学生花名册" />
+            <p class="demo-label">不含返回按钮，仅展示页面标题。适用于一级导航页面（如列表页、概览页）。</p>
+          </div>
+          <div class="demo-section ph-no-back">
+            <p class="demo-title">无返回 · 带操作区</p>
+            <el-page-header content="学生花名册">
+              <template #extra>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <el-button type="primary">新增学生</el-button>
+                  <el-button>导入</el-button>
+                  <el-button>导出</el-button>
+                </div>
+              </template>
+            </el-page-header>
+            <p class="demo-label">操作按钮组：主色按钮在左，按钮间距 12px。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

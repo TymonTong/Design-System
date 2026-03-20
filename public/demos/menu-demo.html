@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const activeIndex = ref('1-1')
+        const isCollapse = ref(false)
+        return { activeIndex, isCollapse }
+      },
+      template: `
+        <div>
+          <div style="margin-bottom:12px;">
+            <el-button text @click="isCollapse = !isCollapse">
+              <el-icon><component :is="isCollapse ? 'DArrowRight' : 'DArrowLeft'" /></el-icon>
+              <span>{{ isCollapse ? '展开' : '收起' }}</span>
+            </el-button>
+          </div>
+          <div style="display:block; background:var(--el-color-text-200); border-radius:8px; padding:24px;">
+            <el-menu
+              :default-active="activeIndex"
+              :collapse="isCollapse"
+              :style="isCollapse ? 'width:80px' : 'width:240px'"
+              @select="val => activeIndex = val"
+            >
+              <el-sub-menu index="1">
+                <template #title>
+                  <el-icon><User /></el-icon>
+                  <span>账号管理</span>
+                </template>
+                <el-menu-item index="1-1">账号列表</el-menu-item>
+                <el-sub-menu index="1-2">
+                  <template #title>作品管理</template>
+                  <el-menu-item index="1-2-1">视频作品</el-menu-item>
+                  <el-menu-item index="1-2-2">图文作品</el-menu-item>
+                  <el-menu-item index="1-2-3">账号审核</el-menu-item>
+                </el-sub-menu>
+                <el-menu-item index="1-3">操作日志</el-menu-item>
+              </el-sub-menu>
+              <el-menu-item index="2">
+                <el-icon><Cpu /></el-icon>
+                <template #title>自动化中心</template>
+              </el-menu-item>
+              <el-sub-menu index="3">
+                <template #title>
+                  <el-icon><Files /></el-icon>
+                  <span>任务管理</span>
+                </template>
+                <el-menu-item index="3-1">任务列表</el-menu-item>
+                <el-menu-item index="3-2">任务配置</el-menu-item>
+              </el-sub-menu>
+              <el-sub-menu index="4">
+                <template #title>
+                  <el-icon><PictureFilled /></el-icon>
+                  <span>素材管理</span>
+                </template>
+                <el-menu-item index="4-1">图片素材</el-menu-item>
+                <el-menu-item index="4-2">视频素材</el-menu-item>
+              </el-sub-menu>
+              <el-sub-menu index="5">
+                <template #title>
+                  <el-icon><Setting /></el-icon>
+                  <span>系统管理</span>
+                </template>
+                <el-menu-item index="5-1">配置管理</el-menu-item>
+                <el-menu-item index="5-2">团队管理</el-menu-item>
+              </el-sub-menu>
+              <el-menu-item index="6">
+                <el-icon><User /></el-icon>
+                <template #title>个人中心</template>
+              </el-menu-item>
+            </el-menu>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    // 用 ResizeObserver 持续监听 body 高度，菜单展开/收起时自动通知父页面
+    const sendHeight = () => {
+      parent.postMessage({ height: document.body.scrollHeight }, '*')
+    }
+    const ro = new ResizeObserver(sendHeight)
+    ro.observe(document.body)
+    sendHeight()
+  </script>
+</body>
+</html>

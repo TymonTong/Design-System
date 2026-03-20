@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const page1 = ref(1)
+        const page2 = ref(3)
+        const pageSize = ref(20)
+        return { page1, page2, pageSize }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础分页</p>
+            <el-pagination
+              v-model:current-page="page1"
+              :total="100"
+              :page-size="10"
+              layout="prev, pager, next"
+            />
+            <p class="demo-label">最简分页：上一页 + 页码列表 + 下一页，点击页码可交互切换。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">完整分页（表格标配）</p>
+            <el-pagination
+              v-model:current-page="page2"
+              v-model:page-size="pageSize"
+              :total="358"
+              :page-sizes="[10, 20, 50, 100]"
+              layout="total, sizes, prev, pager, next, jumper"
+            />
+            <p class="demo-label">完整分页：总数 + 每页条数选择 + 翻页 + 跳转。B 端数据管理页推荐使用此布局。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

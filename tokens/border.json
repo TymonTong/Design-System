@@ -1,0 +1,37 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "B端产品设计规范 · 边框 & 圆角 Token",
+  "border": {
+    "radius": {
+      "none":   { "$value": "0px",  "$type": "borderRadius", "$description": "无圆角，用于表格行等" },
+      "small":  { "$value": "2px",  "$type": "borderRadius", "$description": "极小圆角，Badge 徽标", "cssVar": "--el-border-radius-small" },
+      "base":   { "$value": "4px",  "$type": "borderRadius", "$description": "标准圆角，按钮、输入框、标签、下拉", "cssVar": "--el-border-radius-base" },
+      "medium": { "$value": "6px",  "$type": "borderRadius", "$description": "中圆角，弹窗、卡片内容区" },
+      "large":  { "$value": "8px",  "$type": "borderRadius", "$description": "大圆角，卡片、面板、模态框" },
+      "round":  { "$value": "12px", "$type": "borderRadius", "$description": "胶囊形，pill 标签、胶囊按钮", "cssVar": "--el-border-radius-round" },
+      "circle": { "$value": "50%",  "$type": "borderRadius", "$description": "圆形，头像、图标按钮", "cssVar": "--el-border-radius-circle" }
+    },
+    "width": {
+      "thin":   { "$value": "1px", "$type": "borderWidth", "$description": "标准细线边框" },
+      "medium": { "$value": "2px", "$type": "borderWidth", "$description": "强调边框、选中态" }
+    },
+    "style": {
+      "solid":  { "$value": "solid",  "$type": "borderStyle", "$description": "实线，最常用" },
+      "dashed": { "$value": "dashed", "$type": "borderStyle", "$description": "虚线，用于拖拽区域、占位区域" }
+    },
+    "color": {
+      "default": { "$value": "#DADCE0", "$description": "常规边框", "cssVar": "--el-border-color" },
+      "light":   { "$value": "#EBECED", "$description": "浅色边框、分割线", "cssVar": "--el-border-color-light" },
+      "lighter": { "$value": "#F5F6F7", "$description": "更浅边框", "cssVar": "--el-border-color-lighter" },
+      "focus":   { "$value": "#4628FF", "$description": "聚焦态边框，等同主色", "cssVar": "--el-color-primary" },
+      "error":   { "$value": "#ED5153", "$description": "错误态边框", "cssVar": "--el-color-danger" }
+    }
+  },
+  "shadow": {
+    "none":    { "$value": "none",                             "$description": "无阴影" },
+    "sm":      { "$value": "0 1px 4px 0 rgba(0,0,0,0.04)",   "$description": "最轻阴影，hover 卡片", "cssVar": "--el-box-shadow-lighter" },
+    "base":    { "$value": "0 2px 8px 0 rgba(0,0,0,0.06)",   "$description": "常规阴影，卡片", "cssVar": "--el-box-shadow-light" },
+    "md":      { "$value": "0 4px 16px 0 rgba(0,0,0,0.08)",  "$description": "中等阴影，下拉菜单、弹出层", "cssVar": "--el-box-shadow" },
+    "lg":      { "$value": "0 4px 24px 0 rgba(0,0,0,0.12)",  "$description": "强阴影，弹窗、抽屉", "cssVar": "--el-box-shadow-dark" }
+  }
+}

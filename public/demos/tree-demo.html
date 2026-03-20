@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .tree-wrap { padding: 16px; background: #fff; border-radius: 4px; border: 1px solid var(--el-color-text-300); display: inline-block; }
+    .el-tree {
+      --el-tree-node-hover-bg-color: var(--el-color-primary-100);
+      --el-tree-node-content-height: 36px;
+    }
+    .el-tree .el-tree-node.is-current > .el-tree-node__content {
+      background-color: var(--el-color-primary-200);
+      color: var(--el-color-primary-600);
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref, watch } = Vue
+    const app = createApp({
+      setup() {
+        const treeData = [
+          { id: 1, label: '一级节点 A', children: [
+            { id: 11, label: '二级节点 A-1', children: [
+              { id: 111, label: '三级节点 A-1-1' },
+              { id: 112, label: '三级节点 A-1-2' },
+            ]},
+            { id: 12, label: '二级节点 A-2' },
+          ]},
+          { id: 2, label: '一级节点 B', children: [
+            { id: 21, label: '二级节点 B-1' },
+            { id: 22, label: '二级节点 B-2', disabled: true },
+          ]},
+          { id: 3, label: '一级节点 C（禁用）', disabled: true, children: [
+            { id: 31, label: '二级节点 C-1' },
+          ]},
+        ]
+
+        const defaultProps = { children: 'children', label: 'label', disabled: 'disabled' }
+        const defaultCheckedKeys = [111, 21]
+
+        const filterValue = ref('')
+        const filterTreeRef = ref(null)
+
+        function filterNode(value, data) {
+          if (!value) return true
+          return data.label.includes(value)
+        }
+
+        watch(filterValue, (val) => {
+          filterTreeRef.value?.filter(val)
+        })
+
+        function handleNodeClick(data) {
+          ElementPlus.ElMessage({ message: `点击节点：${data.label}`, type: 'info', duration: 1500 })
+        }
+
+        return { treeData, defaultProps, defaultCheckedKeys, filterValue, filterTreeRef, filterNode, handleNodeClick }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础树形</p>
+            <div class="tree-wrap">
+              <el-tree :data="treeData" :props="defaultProps" default-expand-all @node-click="handleNodeClick" style="min-width:280px;" />
+            </div>
+            <p class="demo-label">基础树形展示，点击节点高亮选中。hover 背景为 --el-color-primary-100，选中背景为 --el-color-primary-200。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可勾选树形</p>
+            <div class="tree-wrap">
+              <el-tree :data="treeData" :props="defaultProps" show-checkbox default-expand-all :default-checked-keys="defaultCheckedKeys" node-key="id" style="min-width:280px;" />
+            </div>
+            <p class="demo-label">show-checkbox 显示复选框，支持全选/部分选中（indeterminate 半选态）。disabled 节点不可勾选。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可过滤树形</p>
+            <el-input v-model="filterValue" placeholder="输入关键字过滤" style="width:260px; margin-bottom:12px;" clearable />
+            <div class="tree-wrap">
+              <el-tree ref="filterTreeRef" :data="treeData" :props="defaultProps" :filter-node-method="filterNode" default-expand-all style="min-width:280px;" />
+            </div>
+            <p class="demo-label">输入关键字实时过滤节点，不匹配的节点隐藏，父节点在子节点匹配时保留。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,668 @@
+/* ================================================================
+   el-plus-theme.css
+   团队 Element Plus 设计主题 — 纯净版
+   ----------------------------------------------------------------
+   【用途】
+   在 Element Plus 原生样式基础上叠加团队视觉规范（颜色、尺寸、圆角等）。
+   适用于任何使用 Element Plus 的实际项目，无框架依赖，无对抗代码。
+
+   【使用方式】
+   在 Element Plus 官方 CSS 之后引入本文件：
+     <link rel="stylesheet" href="element-plus/dist/index.css" />
+     <link rel="stylesheet" href="el-plus-theme.css" />
+
+   【不包含的内容】
+   VitePress / 文档站相关的对抗样式由 custom.css 单独维护，
+   本文件不依赖也不包含任何文档框架的逻辑。
+   ================================================================ */
+
+
+/* ================================================================
+   §1  设计系统 CSS Variables（Design Tokens）
+   ================================================================ */
+:root {
+  /* 主色阶 */
+  --el-color-primary-100: #F7F8FC;
+  --el-color-primary-200: #EDF0FC;
+  --el-color-primary-300: #E8E9FF;
+  --el-color-primary-400: #C2C4FF;
+  --el-color-primary-500: #757AFF;
+  --el-color-primary-600: #4628FF;
+  --el-color-primary-700: #170DA6;
+
+  /* 成功色阶 */
+  --el-color-success-100: #EBFAF8;
+  --el-color-success-200: #C2F0E9;
+  --el-color-success-300: #4CD2BE;
+  --el-color-success-400: #00BFA2;
+
+  /* 危险色阶 */
+  --el-color-danger-100:  #FDEAEA;
+  --el-color-danger-200:  #FBD5D6;
+  --el-color-danger-300:  #F28586;
+  --el-color-danger-400:  #ED5153;
+
+  /* 警告色阶 */
+  --el-color-warning-100: #FFF8EB;
+  --el-color-warning-200: #FFECCB;
+  --el-color-warning-300: #FFC561;
+  --el-color-warning-400: #FFA100;
+
+  /* 中性色阶（文字 / 边框 / 背景） */
+  --el-color-text-0:    #FFFFFF;
+  --el-color-text-100:  #F5F6F7;
+  --el-color-text-200:  #F7F8FA;
+  --el-color-text-300:  #EBECED;
+  --el-color-text-400:  #DADCE0;
+  --el-color-text-500:  #CCD0D6;
+  --el-color-text-600:  #B7BCC7;
+  --el-color-text-700:  #8E95A3;
+  --el-color-text-800:  #59606E;
+  --el-color-text-900:  #3D434E;
+  --el-color-text-1000: #161719;
+
+  /* ── El Plus 内置变量映射 ── */
+  --el-color-primary:         var(--el-color-primary-600);
+  --el-color-primary-light-1: #5643FF;
+  --el-color-primary-light-2: #655EFF;
+  --el-color-primary-light-3: var(--el-color-primary-500);
+  --el-color-primary-light-4: #888CFF;
+  --el-color-primary-light-5: #9B9FFF;
+  --el-color-primary-light-6: #AFB1FF;
+  --el-color-primary-light-7: var(--el-color-primary-400);
+  --el-color-primary-light-8: var(--el-color-primary-300);
+  --el-color-primary-light-9: var(--el-color-primary-200);
+  --el-color-primary-dark-2:  var(--el-color-primary-700);
+
+  --el-color-success:         var(--el-color-success-400);
+  --el-color-success-light-3: var(--el-color-success-300);
+  --el-color-success-light-7: var(--el-color-success-200);
+  --el-color-success-light-9: var(--el-color-success-100);
+
+  --el-color-warning:         var(--el-color-warning-400);
+  --el-color-warning-light-3: var(--el-color-warning-300);
+  --el-color-warning-light-7: var(--el-color-warning-200);
+  --el-color-warning-light-9: var(--el-color-warning-100);
+
+  --el-color-danger:          var(--el-color-danger-400);
+  --el-color-danger-light-3:  var(--el-color-danger-300);
+  --el-color-danger-light-7:  var(--el-color-danger-200);
+  --el-color-danger-light-9:  var(--el-color-danger-100);
+
+  --el-color-error:           var(--el-color-danger-400);
+  --el-color-error-light-3:   var(--el-color-danger-300);
+  --el-color-error-light-7:   var(--el-color-danger-200);
+  --el-color-error-light-9:   var(--el-color-danger-100);
+
+  --el-color-info:         var(--el-color-text-800);
+  --el-color-info-light-3: var(--el-color-text-600);
+  --el-color-info-light-7: var(--el-color-text-400);
+  --el-color-info-light-9: var(--el-color-text-100);
+
+  --el-text-color-primary:     var(--el-color-text-1000);
+  --el-text-color-regular:     var(--el-color-text-800);
+  --el-text-color-secondary:   var(--el-color-text-700);
+  --el-text-color-placeholder: var(--el-color-text-600);
+  --el-text-color-disabled:    var(--el-color-text-500);
+
+  --el-border-color:             var(--el-color-text-400);
+  --el-border-color-light:       var(--el-color-text-300);
+  --el-border-color-lighter:     var(--el-color-text-100);
+  --el-border-color-extra-light: var(--el-color-text-200);
+  --el-border-color-dark:        var(--el-color-text-500);
+
+  --el-bg-color:         var(--el-color-text-0);
+  --el-bg-color-page:    #F0F2F5;
+  --el-bg-color-overlay: var(--el-color-text-0);
+  --el-fill-color:       var(--el-color-text-100);
+  --el-fill-color-light: var(--el-color-text-200);
+  --el-fill-color-blank: var(--el-color-text-0);
+
+  /* 字体 */
+  --el-font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+  --el-font-size-extra-small: 12px;
+  --el-font-size-small:       13px;
+  --el-font-size-base:        14px;
+  --el-font-size-medium:      16px;
+  --el-font-size-large:       18px;
+  --el-font-size-extra-large: 20px;
+
+  /* 圆角 */
+  --el-border-radius-base:   4px;
+  --el-border-radius-small:  2px;
+  --el-border-radius-round:  12px;
+  --el-border-radius-circle: 50%;
+
+  /* 阴影 */
+  --el-box-shadow:       0 4px 16px 0 rgba(0, 0, 0, 0.08);
+  --el-box-shadow-light: 0 2px 8px  0 rgba(0, 0, 0, 0.06);
+
+  /* 组件尺寸 */
+  --el-component-size:          36px;
+  --el-component-size-large:    40px;
+  --el-component-size-small:    28px;
+  /* 表单 label 高度与输入框保持一致（不会自动继承 component-size） */
+  --el-form-item-label-height:  36px;
+
+  /* 动效 */
+  --el-transition-duration:      0.2s;
+  --el-transition-duration-fast: 0.15s;
+}
+
+
+/* ================================================================
+   §2  Button 按钮
+   ================================================================ */
+/* 基础规格：高度 36px，水平 padding 12px，圆角 6px */
+.el-button {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 6px;
+}
+.el-button.is-text {
+  height: 36px;
+  padding: 0;
+}
+/* El Plus 自身 CSS 对相邻按钮设了 margin-left:12px，在 flex gap 布局中会造成双倍间距，统一归零 */
+.el-button + .el-button {
+  margin-left: 0 !important;
+}
+/* 图标与文字间距 */
+.el-button [class*="el-icon"] + span,
+.el-button .el-icon + span {
+  margin-left: 8px !important;
+}
+
+/* ── 文字按钮全局规范：无背景无边框，仅文字颜色变化 ──
+   El Plus 默认会在 is-text hover 时填充 --el-fill-color-light 背景，
+   与"文字按钮无背景"规范冲突，此处统一强制覆盖为 transparent。  */
+.el-button.is-text:not(.is-disabled):hover,
+.el-button.is-text:not(.is-disabled):focus  { background: transparent !important; }
+.el-button.is-text:not(.is-disabled):active { background: transparent !important; }
+/* 主色文字按钮：default primary-600 → hover primary-500 → active primary-700 */
+.el-button--primary.is-text:not(.is-disabled):hover  { color: var(--el-color-primary-500) !important; }
+.el-button--primary.is-text:not(.is-disabled):active { color: var(--el-color-primary-700) !important; }
+/* 次级文字按钮（无 type）：default text-800 → hover text-700 → active text-1000 */
+.el-button.is-text:not(.el-button--primary):not(.is-disabled):hover  { color: var(--el-color-text-700)  !important; }
+.el-button.is-text:not(.el-button--primary):not(.is-disabled):active { color: var(--el-color-text-1000) !important; }
+
+/* 折叠/展开按钮专用（type="primary" text）：默认灰色，hover/active 变主色
+   在 demo <style> 中以相同特异性覆盖，此处仅作 Vue 组件环境的备用兜底 */
+.app-collapse-btn.el-button--primary.is-text {
+  color: var(--el-color-text-700) !important;
+  background: transparent !important;
+}
+.app-collapse-btn.el-button--primary.is-text:hover {
+  color: var(--el-color-primary-600) !important;
+  background: transparent !important;
+}
+.app-collapse-btn.el-button--primary.is-text:active {
+  color: var(--el-color-primary-700) !important;
+  background: transparent !important;
+}
+
+/* 填充按钮（btn-filled）：灰底无边框，适合并排辅助操作 */
+.btn-filled.el-button {
+  --el-button-bg-color:              var(--el-color-text-100);
+  --el-button-text-color:            var(--el-color-text-800);
+  --el-button-border-color:          transparent;
+  --el-button-hover-bg-color:        var(--el-color-text-300);
+  --el-button-hover-text-color:      var(--el-color-text-800);
+  --el-button-hover-border-color:    transparent;
+  --el-button-active-bg-color:       var(--el-color-text-400);
+  --el-button-active-text-color:     var(--el-color-text-800);
+  --el-button-active-border-color:   transparent;
+  --el-button-disabled-bg-color:     var(--el-color-text-100);
+  --el-button-disabled-text-color:   var(--el-color-text-500);
+  --el-button-disabled-border-color: transparent;
+}
+
+/* 幽灵按钮（btn-ghost）：白底灰边，hover / active 变主色边框 */
+.btn-ghost.el-button {
+  --el-button-bg-color:              var(--el-color-text-0);
+  --el-button-text-color:            var(--el-color-text-800);
+  --el-button-border-color:          var(--el-color-text-400);
+  --el-button-hover-bg-color:        var(--el-color-primary-100);
+  --el-button-hover-text-color:      var(--el-color-primary-600);
+  --el-button-hover-border-color:    var(--el-color-primary-400);
+  --el-button-active-bg-color:       var(--el-color-primary-200);
+  --el-button-active-text-color:     var(--el-color-primary-600);
+  --el-button-active-border-color:   var(--el-color-primary-600);
+  --el-button-disabled-bg-color:     var(--el-color-text-0);
+  --el-button-disabled-text-color:   var(--el-color-text-500);
+  --el-button-disabled-border-color: var(--el-color-text-300);
+}
+
+
+/* ================================================================
+   §3  Input 输入框
+   ================================================================ */
+.el-input__wrapper {
+  min-height: 36px;
+}
+
+
+/* ================================================================
+   §4  Select 选择器
+   ================================================================ */
+.el-select__wrapper {
+  min-height: 36px;
+}
+/* el-select 下拉：高度 40px（border-box），去掉上下 padding 让 flex 居中 */
+.el-select-dropdown__item {
+  height: 40px !important;
+  line-height: 40px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.el-select-dropdown__item:not(.is-disabled):hover,
+.el-select-dropdown__item.hover {
+  color: var(--el-color-text-900) !important;
+  background-color: var(--el-color-text-100) !important;
+}
+
+
+/* ================================================================
+   §5  Dropdown 下拉菜单 / 级联面板
+   ================================================================ */
+
+/* el-dropdown / el-dropdown-menu 条目：
+   El Plus 默认 padding:5px 16px（content-box），总高会变 50px，
+   清除上下 padding，靠 align-items:center 垂直居中 */
+.el-dropdown-menu__item {
+  height: 40px !important;
+  line-height: 40px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+/* 下拉菜单图标统一 16px */
+.el-dropdown-menu__item .el-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0;
+}
+/* 悬浮文字色统一 text-900，背景 text-100 */
+.el-dropdown-menu__item:not(.is-disabled):hover,
+.el-dropdown-menu__item:not(.is-disabled):focus {
+  color: var(--el-color-text-900) !important;
+  background-color: var(--el-color-text-100) !important;
+}
+
+/* 级联面板条目（el-cascader-node）：El Plus 默认高度 34px，统一改为 40px */
+.el-cascader-node {
+  height: 40px !important;
+  line-height: 40px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.el-cascader-node:not(.is-disabled):hover {
+  color: var(--el-color-text-900) !important;
+  background-color: var(--el-color-text-100) !important;
+}
+
+
+/* ================================================================
+   §6  Tag 标签
+   ================================================================ */
+.el-tag {
+  padding: 0 6px;
+  height: 24px;
+  line-height: 22px;
+}
+
+
+/* ================================================================
+   §7  Menu 导航菜单
+   ================================================================ */
+.el-menu {
+  --el-menu-text-color:       var(--el-color-text-800);
+  --el-menu-active-color:     var(--el-color-primary-600);
+  --el-menu-hover-bg-color:   var(--el-color-primary-100);
+  --el-menu-hover-text-color: var(--el-color-primary-600);
+  --el-menu-bg-color:         #fff;
+  --el-menu-item-height:      48px;
+  --el-menu-sub-item-height:  48px;
+  border-right: none !important;
+}
+.el-menu:not(.el-menu--inline) {
+  padding: 16px !important;
+  margin: 0 !important;
+}
+.el-menu-item,
+.el-sub-menu__title {
+  border-radius: 4px !important;
+}
+.el-menu-item.is-active {
+  background-color: var(--el-color-primary-200) !important;
+}
+/* 展开状态：一级菜单 left padding */
+.el-menu:not(.el-menu--collapse) > .el-menu-item,
+.el-menu:not(.el-menu--collapse) > .el-sub-menu > .el-sub-menu__title {
+  padding-left: 12px !important;
+}
+/* 展开状态：二级菜单 left padding */
+.el-menu:not(.el-menu--collapse) .el-menu--inline > .el-menu-item,
+.el-menu:not(.el-menu--collapse) .el-menu--inline > .el-sub-menu > .el-sub-menu__title {
+  padding-left: 48px !important;
+}
+/* 展开状态：三级菜单 left padding */
+.el-menu:not(.el-menu--collapse) .el-menu--inline .el-menu--inline > .el-menu-item,
+.el-menu:not(.el-menu--collapse) .el-menu--inline .el-menu--inline > .el-sub-menu > .el-sub-menu__title {
+  padding-left: 64px !important;
+}
+/* 收起状态 */
+.el-menu--collapse .el-menu-item {
+  padding: 0 !important;
+  justify-content: center !important;
+}
+.el-menu--collapse .el-menu-tooltip__trigger {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+.el-menu--collapse > .el-sub-menu > .el-sub-menu__title {
+  padding: 0 !important;
+  justify-content: center !important;
+}
+.el-menu--collapse .el-icon {
+  margin-right: 0 !important;
+}
+/* 激活的父级 sub-menu 标题颜色 */
+.el-menu > .el-sub-menu.is-active > .el-sub-menu__title {
+  color: var(--el-color-text-1000) !important;
+}
+
+
+/* ================================================================
+   §8  Breadcrumb 面包屑
+   ================================================================ */
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  color: var(--el-color-text-700) !important;
+  font-weight: 400;
+}
+.el-breadcrumb__item:last-child .el-breadcrumb__inner {
+  color: var(--el-color-text-1000) !important;
+  font-weight: 400;
+  cursor: default;
+}
+.el-breadcrumb__separator {
+  color: var(--el-color-text-500);
+}
+
+
+/* ================================================================
+   §9  PageHeader 页面标题
+   ================================================================ */
+.el-page-header {
+  height: 36px;
+  align-items: center;
+  border-bottom: none !important;
+}
+.el-page-header__header {
+  height: 36px;
+  align-items: center;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+.el-page-header__content {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 28px !important;
+  color: var(--el-color-text-1000) !important;
+}
+/* 隐藏返回按钮（辅助类） */
+.ph-no-back .el-page-header__back,
+.ph-no-back .el-page-header__left .el-divider--vertical {
+  display: none !important;
+}
+/* 右侧操作区按钮间距归零（由外层容器 gap 控制） */
+.el-page-header__extra .el-button + .el-button {
+  margin-left: 0 !important;
+}
+
+
+/* ================================================================
+   §10  Table 数据表格
+   ----------------------------------------------------------------
+   接入规则：
+   1. <el-table> 必须用 <div class="table-container"> 包裹
+   2. 禁止使用 stripe 斑马纹、border 纵向分隔线属性
+   3. 操作列最多 3 个文字按钮，超出收入「更多↓」下拉
+   4. 按钮容器用 <div class="tbl-actions">，间距 12px
+   ================================================================ */
+
+/* CSS 变量：颜色映射 */
+.el-table {
+  --el-table-header-bg-color:    var(--el-color-primary-200);
+  --el-table-header-text-color:  var(--el-color-text-900);
+  --el-table-text-color:         var(--el-color-text-800);
+  --el-table-row-hover-bg-color: var(--el-color-primary-100);
+  --el-table-border-color:       var(--el-color-text-300);
+}
+
+/* 外容器：统一边框 1px + 圆角 12px + 裁剪溢出 */
+.table-container {
+  border: 1px solid var(--el-color-text-300);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.table-container .el-table {
+  border-radius: 0;
+}
+
+/* 表头：高度 48px，primary-200 背景，text-900 文字，500 字重 */
+.el-table th.el-table__cell {
+  height: 48px !important;
+  padding: 12px 16px !important;
+  box-sizing: border-box !important;
+  font-weight: 500 !important;
+}
+
+/* 数据行：最小高度 64px */
+.el-table td.el-table__cell {
+  height: 64px !important;
+  padding: 12px 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* cell 内边距归零（由 padding 控制，不靠 cell 自身） */
+.el-table .cell {
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* 最后一行无底部边框 */
+.el-table table tr:last-child td.el-table__cell {
+  border-bottom: none !important;
+}
+
+/* 消除 El Plus 内部 border-patch 伪元素 */
+.el-table .el-table__inner-wrapper::before,
+.el-table .el-table__inner-wrapper::after {
+  display: none !important;
+}
+
+/* 操作列按钮容器：flex 横排 */
+.tbl-actions {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* ── 操作列文字按钮（严格按 button.md 文字按钮规范实现）──
+   规范交互：
+     主色文字  default primary-600 | hover primary-500 | active primary-700
+     次级文字  default text-800    | hover text-700    | active text-1000
+   显式写出 hover/active，不依赖 El Plus 内部变量传导，el-table 和原生 table 均适用 */
+.el-table .el-button.is-text,
+.tbl-actions .el-button.is-text {
+  padding: 0 !important;
+  min-width: unset !important;
+  height: auto !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+/* 主色文字 hover / active */
+.tbl-actions .el-button--primary.is-text:not(:disabled):hover,
+.el-table .el-button--primary.is-text:not(:disabled):hover  { color: var(--el-color-primary-500) !important; background: transparent !important; }
+.tbl-actions .el-button--primary.is-text:not(:disabled):active,
+.el-table .el-button--primary.is-text:not(:disabled):active { color: var(--el-color-primary-700) !important; background: transparent !important; }
+/* 次级文字 hover / active */
+.tbl-actions .el-button.is-text:not(.el-button--primary):not(:disabled):hover,
+.el-table  .el-button.is-text:not(.el-button--primary):not(:disabled):hover  { color: var(--el-color-text-700)  !important; background: transparent !important; }
+.tbl-actions .el-button.is-text:not(.el-button--primary):not(:disabled):active,
+.el-table  .el-button.is-text:not(.el-button--primary):not(:disabled):active { color: var(--el-color-text-1000) !important; background: transparent !important; }
+
+/* ──────────────────────────────────────────────────────────────
+   操作列按钮颜色规范（重要，不可随意更改）
+   ──────────────────────────────────────────────────────────────
+   ✅ 直接展示在操作列中的按钮：
+      第 1 个  →  type="primary" text  （主色，通常为「详情」「查看」等）
+      第 2～3 个 →  text（无 type）     （文字色 text-800，通常为「编辑」「删除」等）
+      ⚠️ 即使是删除，直接展示时也用文字色，不使用 type="danger"（不红色）
+
+   ✅ 收入「更多↓」下拉菜单的危险操作：
+      可以使用 style="color: var(--el-color-danger-400)"（红色）
+      示例：<el-dropdown-item style="color:var(--el-color-danger-400)">删除</el-dropdown-item>
+
+   列宽公式：左边距16 + 按钮文字宽 + 间距12 × (n-1) + 右边距16
+   3 个两字按钮：16 + 28 + 12 + 28 + 12 + 28 + 16 = 140，取整 160px
+   ────────────────────────────────────────────────────────────── */
+
+
+/* ================================================================
+   §11  Pagination 翻页器
+   ================================================================ */
+.el-pagination {
+  display: flex !important;
+  align-items: center !important;
+  height: 36px !important;
+}
+.el-pagination .el-pager {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 0 !important;
+  list-style: none !important;
+  margin: 0 !important;
+}
+.el-pagination .btn-prev,
+.el-pagination .btn-next {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.el-pagination .el-pager li {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  padding: 0 6px !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+}
+.el-pagination .el-pager li:not(.is-active) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ================================================================
+   §12  Checkbox 多选框
+   ================================================================
+   设计规范：
+   · 未选中   — 方框描边  var(--el-color-text-400)，文字 var(--el-color-text-800)
+   · 悬停     — 方框描边  var(--el-color-primary-600)
+   · 选中/半选 — 填充色   var(--el-color-primary-600)，勾 / 横线 白色
+   · 禁用     — 描边      var(--el-color-text-300)，文字 var(--el-color-text-500)
+   ================================================================ */
+
+/* 覆盖 El Plus 的 checkbox 内置 CSS 变量 */
+.el-checkbox {
+  --el-checkbox-border-color:               var(--el-color-text-400);
+  --el-checkbox-bg-color:                   #ffffff;
+  --el-checkbox-font-color:                 var(--el-color-text-800);
+  --el-checkbox-input-border-color-hover:   var(--el-color-primary-600);
+  --el-checkbox-checked-bg-color:           var(--el-color-primary-600);
+  --el-checkbox-checked-icon-color:         #ffffff;
+  --el-checkbox-checked-input-border-color: var(--el-color-primary-600);
+  --el-checkbox-checked-text-color:         var(--el-color-primary-600);
+  --el-checkbox-disabled-border-color:      var(--el-color-text-300);
+  --el-checkbox-disabled-icon-color:        var(--el-color-text-300);
+  --el-checkbox-disabled-checked-bg-color:  var(--el-color-text-300);
+}
+
+/* 方框尺寸与圆角 */
+.el-checkbox__inner {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 3px !important;
+  border-color: var(--el-color-text-400) !important;
+  background-color: #ffffff !important;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* 悬停 */
+.el-checkbox:not(.is-disabled):hover .el-checkbox__inner {
+  border-color: var(--el-color-primary-600) !important;
+}
+
+/* 选中状态 */
+.el-checkbox.is-checked .el-checkbox__inner {
+  background-color: var(--el-color-primary-600) !important;
+  border-color:     var(--el-color-primary-600) !important;
+}
+.el-checkbox.is-checked .el-checkbox__inner::after {
+  border-color: #ffffff !important;
+}
+
+/* 半选（indeterminate） */
+.el-checkbox.is-indeterminate .el-checkbox__inner {
+  background-color: var(--el-color-primary-600) !important;
+  border-color:     var(--el-color-primary-600) !important;
+}
+.el-checkbox.is-indeterminate .el-checkbox__inner::before {
+  background-color: #ffffff !important;
+}
+
+/* 标签文字间距 */
+.el-checkbox__label {
+  padding-left: 8px !important;
+  color: var(--el-color-text-800) !important;
+  font-size: 14px !important;
+}
+.el-checkbox.is-checked .el-checkbox__label {
+  color: var(--el-color-primary-600) !important;
+}
+
+/* 禁用 */
+.el-checkbox.is-disabled .el-checkbox__inner {
+  border-color:     var(--el-color-text-300) !important;
+  background-color: var(--el-color-text-300) !important;
+}
+.el-checkbox.is-disabled .el-checkbox__label {
+  color: var(--el-color-text-500) !important;
+}
+
+/* ── 表格操作列按钮间距 ── */
+/* 操作列容器：flex 布局，按钮之间均匀间隔 12px */
+.tbl-actions { display: flex; align-items: center; }
+/* 文字按钮紧跟下拉触发器时补间距 */
+.tbl-actions .el-button + .el-dropdown { margin-left: 12px; }

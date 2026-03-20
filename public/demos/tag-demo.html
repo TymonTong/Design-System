@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const closableTags = ref([
+          { label: '系统tag',   type: 'primary' },
+          { label: '成功tag',   type: 'success' },
+          { label: '提示tag',   type: 'warning' },
+          { label: '失败错误',  type: 'danger' },
+          { label: '低层级tag', type: 'info' },
+        ])
+        function removeTag(tag) {
+          closableTags.value = closableTags.value.filter(t => t !== tag)
+        }
+        function resetTags() {
+          closableTags.value = [
+            { label: '系统tag',   type: 'primary' },
+            { label: '成功tag',   type: 'success' },
+            { label: '提示tag',   type: 'warning' },
+            { label: '失败错误',  type: 'danger' },
+            { label: '低层级tag', type: 'info' },
+          ]
+        }
+        return { closableTags, removeTag, resetTags }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础标签</p>
+            <div class="tag-row">
+              <el-tag type="primary" effect="light">系统tag</el-tag>
+              <el-tag type="success" effect="light">成功tag</el-tag>
+              <el-tag type="warning" effect="light">提示tag</el-tag>
+              <el-tag type="danger"  effect="light">失败错误</el-tag>
+              <el-tag type="info"    effect="light">低层级tag</el-tag>
+            </div>
+            <p class="demo-label">5 种颜色：主色蓝紫 / 绿 / 黄 / 红 / 灰，统一使用 effect="light" 浅色样式。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可关闭标签</p>
+            <div class="tag-row">
+              <el-tag
+                v-for="tag in closableTags"
+                :key="tag.label"
+                :type="tag.type"
+                effect="light"
+                closable
+                @close="removeTag(tag)"
+              >{{ tag.label }}</el-tag>
+              <el-button size="small" @click="resetTags">重置</el-button>
+            </div>
+            <p class="demo-label">closable 可关闭，@close 事件回调删除标签，点击「重置」恢复。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

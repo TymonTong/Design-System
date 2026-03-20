@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    /* 灰色背景 = 模拟页面右侧区域，app-topbar 白色背景自然分离，无需额外 wrapper */
+    body {
+      font-family: var(--el-font-family);
+      font-size: 14px;
+      background: #F5F6F7;
+      padding: 24px 0;
+    }
+
+    /* 顶部栏：白色背景，上下有灰色撑开，自然形成视觉分离 */
+    .app-topbar {
+      height: 56px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .app-topbar__left {
+      display: flex;
+      align-items: center;
+    }
+
+    /* 折叠按钮：使用 type="primary" text，避开全局"非 primary 文字按钮"hover 规则的干扰
+       <style> 标签比 <link> 晚加载，同特异性时此处规则胜出 */
+    .app-collapse-btn.el-button--primary.is-text {
+      padding: 0 8px !important;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--el-color-text-700) !important;   /* 默认：灰色 */
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .app-collapse-btn.el-button--primary.is-text:hover {
+      color: var(--el-color-primary-600) !important; /* hover：主色 */
+      background: transparent !important;
+    }
+    .app-collapse-btn.el-button--primary.is-text:active {
+      color: var(--el-color-primary-700) !important; /* active：深主色 */
+      background: transparent !important;
+    }
+
+    /* 竖向分割线 */
+    .app-topbar__divider.el-divider--vertical {
+      height: 16px !important;
+      margin: 0 12px !important;
+      border-color: var(--el-color-text-400) !important;
+    }
+
+    .app-topbar__right {
+      display: flex;
+      align-items: center;
+    }
+
+    /* 用户头像 */
+    .user-avatar {
+      background: var(--el-color-primary-200) !important;
+      cursor: pointer;
+    }
+    .user-avatar .el-icon {
+      color: var(--el-color-primary-600) !important;
+    }
+    .user-avatar:hover {
+      box-shadow: 0 0 0 2px var(--el-color-primary-400);
+    }
+
+    /* 下拉面板头部 */
+    .user-dropdown-header {
+      padding: 8px 12px;
+    }
+    .user-dropdown-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .user-dropdown-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--el-color-text-1000);
+      line-height: 20px;
+    }
+    .user-dropdown-role {
+      font-size: 12px;
+      color: var(--el-color-text-700);
+      line-height: 16px;
+    }
+
+    /* 头像下拉条目：此 <style> 排在 <link> 之后，可覆盖 El Plus 动态注入的样式
+       box-sizing:border-box + padding-top/bottom:0 确保条目总高 = 40px */
+    .user-dropdown-popper { width: 220px !important; min-width: 220px !important; }
+
+    .el-dropdown-menu .el-dropdown-menu__item {
+      height: 40px !important;
+      box-sizing: border-box !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    .el-dropdown-menu .el-dropdown-menu__item .el-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      flex-shrink: 0;
+    }
+    .el-dropdown-menu .el-dropdown-menu__item:not(.is-disabled):hover {
+      color: var(--el-color-text-900) !important;
+      background-color: var(--el-color-text-100) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+
+    const app = createApp({
+      setup() {
+        const collapsed = ref(false)
+        const breadcrumbs = ref(['账号管理', '账号列表'])
+        const userName = ref('张三')
+        const userRole = ref('管理员')
+        return { collapsed, breadcrumbs, userName, userRole }
+      },
+      template: `
+        <div class="app-topbar">
+
+          <!-- 左侧：折叠按钮 + 分割线 + 面包屑 -->
+          <div class="app-topbar__left">
+            <el-button type="primary" text class="app-collapse-btn" @click="collapsed = !collapsed">
+              <el-icon><component :is="collapsed ? 'DArrowRight' : 'DArrowLeft'" /></el-icon>
+              <span>{{ collapsed ? '展开' : '收起' }}</span>
+            </el-button>
+            <el-divider direction="vertical" class="app-topbar__divider" />
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item v-for="(item, i) in breadcrumbs" :key="i">{{ item }}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+
+          <!-- 右侧：用户头像 + 下拉菜单 -->
+          <div class="app-topbar__right">
+            <el-dropdown trigger="click" placement="bottom-end" popper-class="user-dropdown-popper">
+              <el-avatar :size="40" class="user-avatar">
+                <el-icon :size="20"><UserFilled /></el-icon>
+              </el-avatar>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <div class="user-dropdown-header">
+                    <div class="user-dropdown-info">
+                      <div class="user-dropdown-name">{{ userName }}</div>
+                      <div class="user-dropdown-role">{{ userRole }}</div>
+                    </div>
+                  </div>
+                  <el-divider style="margin:0 12px 8px; width:calc(100% - 24px);" />
+                  <el-dropdown-item><el-icon><UserFilled /></el-icon>个人信息</el-dropdown-item>
+                  <el-dropdown-item><el-icon><Setting /></el-icon>系统设置</el-dropdown-item>
+                  <el-dropdown-item><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+
+    // 计算实际需要的高度（含弹出层 popper）
+    const sendHeight = () => {
+      let maxBottom = document.body.scrollHeight
+      // el-dropdown 的 popper 是绝对定位，不影响 scrollHeight，需单独计算
+      document.querySelectorAll('.el-popper').forEach(el => {
+        if (el.style.display !== 'none' && el.offsetHeight > 0) {
+          const rect = el.getBoundingClientRect()
+          maxBottom = Math.max(maxBottom, rect.bottom + window.scrollY + 16)
+        }
+      })
+      parent.postMessage({ height: maxBottom }, '*')
+    }
+
+    // ResizeObserver：body 尺寸变化时上报
+    const ro = new ResizeObserver(sendHeight)
+    ro.observe(document.body)
+
+    // MutationObserver：popper 出现/消失/style 变化时上报
+    const mo = new MutationObserver(sendHeight)
+    mo.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class']
+    })
+
+    sendHeight()
+  </script>
+</body>
+</html>

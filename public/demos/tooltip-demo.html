@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 60px 20px 80px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+    .demo-section { margin-bottom: 40px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 14px; }
+    .demo-label { font-size: 12px; color: var(--el-color-text-700); margin-top: 10px; }
+    .demo-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp } = Vue
+    const app = createApp({
+      setup() { return {} },
+      template: `
+        <div>
+
+          <!-- 深色主题（默认）：四个方向 -->
+          <div class="demo-section">
+            <p class="demo-title">深色主题（默认）— 四个方向</p>
+            <div class="demo-row">
+              <el-tooltip content="上方提示文字" placement="top">
+                <el-button>上方</el-button>
+              </el-tooltip>
+              <el-tooltip content="下方提示文字" placement="bottom">
+                <el-button>下方</el-button>
+              </el-tooltip>
+              <el-tooltip content="左侧提示文字" placement="left">
+                <el-button>左侧</el-button>
+              </el-tooltip>
+              <el-tooltip content="右侧提示文字" placement="right">
+                <el-button>右侧</el-button>
+              </el-tooltip>
+            </div>
+            <p class="demo-label">
+              默认 effect="dark"，背景色使用 --el-color-text-1000（#161719），文字白色。Hover 触发显示。
+            </p>
+          </div>
+
+          <!-- 浅色主题 -->
+          <div class="demo-section">
+            <p class="demo-title">浅色主题（effect="light"）</p>
+            <div class="demo-row">
+              <el-tooltip content="上方提示文字" placement="top" effect="light">
+                <el-button>上方（浅色）</el-button>
+              </el-tooltip>
+              <el-tooltip content="下方提示文字" placement="bottom" effect="light">
+                <el-button>下方（浅色）</el-button>
+              </el-tooltip>
+              <el-tooltip content="左侧提示文字" placement="left" effect="light">
+                <el-button>左侧（浅色）</el-button>
+              </el-tooltip>
+              <el-tooltip content="右侧提示文字" placement="right" effect="light">
+                <el-button>右侧（浅色）</el-button>
+              </el-tooltip>
+            </div>
+            <p class="demo-label">
+              effect="light"：白色背景 + --el-color-text-300（#EBECEE）边框 + 深色文字。
+            </p>
+          </div>
+
+          <!-- 多行内容 -->
+          <div class="demo-section">
+            <p class="demo-title">多行内容</p>
+            <div class="demo-row">
+              <el-tooltip placement="bottom">
+                <template #content>
+                  第一行提示内容<br />第二行提示内容
+                </template>
+                <el-button>多行提示（深色）</el-button>
+              </el-tooltip>
+              <el-tooltip placement="bottom" effect="light">
+                <template #content>
+                  第一行提示内容<br />第二行提示内容
+                </template>
+                <el-button>多行提示（浅色）</el-button>
+              </el-tooltip>
+            </div>
+            <p class="demo-label">
+              通过 #content 插槽传入多行内容，支持换行标签。
+            </p>
+          </div>
+
+          <!-- 禁用元素 -->
+          <div class="demo-section">
+            <p class="demo-title">禁用元素上的 Tooltip</p>
+            <div class="demo-row">
+              <el-tooltip content="该功能暂不可用" placement="bottom">
+                <span>
+                  <el-button disabled>禁用按钮</el-button>
+                </span>
+              </el-tooltip>
+            </div>
+            <p class="demo-label">
+              disabled 的 el-button 不响应鼠标事件，需在外层包裹 &lt;span&gt; 才能正常触发 Tooltip。
+            </p>
+          </div>
+
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>

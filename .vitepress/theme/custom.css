@@ -1,0 +1,364 @@
+/* ================================================================
+   custom.css — VitePress 文档站点专用样式
+   ----------------------------------------------------------------
+   【职责分层说明】
+
+   本文件 = VitePress 展示层，分两部分：
+
+   第一部分（本文件上半段）
+     文档站布局、Demo 容器、规范表格等 VitePress 专属样式。
+     与实际项目无关，实际项目不需要引入。
+
+   第二部分（本文件下半段：§ VitePress Markdown 样式消毒块）
+     VitePress 渲染 Markdown 时会向 .vp-doc 内所有原生 HTML
+     标签（table/tr/th/td/ul/li 等）注入默认样式，破坏
+     El Plus 组件的内部结构。此块专门对抗这些注入，
+     所有规则均以 .vp-doc 限定作用域，不会污染实际项目。
+
+   ── 实际项目使用的纯净主题 ──
+     public/el-plus-theme.css（与本文件平级）
+     仅含 CSS 变量 + El Plus 纯视觉覆盖，零对抗代码，
+     任何使用 Element Plus 的项目直接引入即可。
+   ================================================================ */
+
+/* ================================================
+   组件标识徽章：蓝色「组件」标签，用于页面标题旁
+   用法：# 左侧区域 <span class="component-badge">组件</span>
+   ================================================ */
+.component-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--el-color-primary-600);
+  background: var(--el-color-primary-200);
+  border: 1px solid var(--el-color-primary-400);
+  border-radius: 20px;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
+  position: relative;
+  top: -3px;
+}
+
+/* ================================================
+   AppStatCard 卡片组布局
+   用法：<div class="stat-card-group"> ... </div>
+   ================================================ */
+.stat-card-group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* VitePress 品牌色同步为我们的主色 */
+:root {
+  --vp-c-brand-1:    var(--el-color-primary-600);
+  --vp-c-brand-2:    var(--el-color-primary-500);
+  --vp-c-brand-3:    var(--el-color-primary-400);
+  --vp-c-brand-soft: rgba(70, 40, 255, 0.08);
+}
+
+/* ================================================
+   布局：左侧边栏 300px，右侧 TOC 240px，中间内容区填满剩余
+   ================================================ */
+@media (min-width: 960px) {
+  :root {
+    --vp-sidebar-width: 300px;
+    --vp-layout-max-width: 100%;
+  }
+}
+
+/* 强行覆盖左侧边栏宽度 */
+.VPSidebar {
+  width: 300px !important;
+}
+
+/* 强行调整内容区距离左侧边栏的边距 */
+@media (min-width: 960px) {
+  .VPContent.has-sidebar {
+    padding-left: 300px !important;
+  }
+}
+
+/* 移除居中最大宽度限制 */
+.VPDoc {
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.VPDoc .container {
+  max-width: none !important;
+  padding: 0 48px !important; /* 给中间内容留一点呼吸空间 */
+  display: flex !important;
+  justify-content: space-between !important;
+  padding-top: 48px !important; /* 顶部大标题上面的间距 */
+}
+
+/* 中间文档内容区撑满 */
+.VPDoc .content {
+  flex: 1 !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  padding-bottom: 64px !important;
+}
+
+.VPDoc .content-container {
+  max-width: none !important;
+}
+
+/* 右侧目录（aside）固定 240px，靠右对齐 */
+.VPDocAside {
+  width: 240px !important;
+  min-width: 240px !important;
+  flex-shrink: 0 !important;
+  margin-left: 48px !important;
+}
+.VPDocAside .aside-container {
+  width: 240px !important;
+  padding-left: 0 !important;
+}
+
+/* ================================================
+   组件展示页 · 通用容器
+   ================================================ */
+.demo-block {
+  border: 1px solid var(--el-color-text-300);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.demo-preview {
+  padding: 32px 24px;
+  background: var(--el-color-primary-100);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.demo-preview.vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.demo-preview.center {
+  justify-content: center;
+}
+
+.demo-label {
+  padding: 8px 16px;
+  background: var(--el-color-text-0);
+  border-top: 1px solid var(--el-color-text-300);
+  font-size: 12px;
+  color: var(--el-color-text-700);
+}
+
+/* ================================================
+   规范表格
+   ================================================ */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  margin-bottom: 32px;
+  font-size: 13px;
+}
+
+.spec-table th {
+  background: var(--el-color-text-100);
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--el-color-text-800);
+  border-bottom: 1px solid var(--el-color-text-300);
+}
+
+.spec-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--el-color-text-200);
+  color: var(--el-color-text-1000);
+  vertical-align: top;
+}
+
+.spec-table td code {
+  background: var(--el-color-primary-200);
+  color: var(--el-color-primary-600);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.spec-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ================================================
+   圆角规范页
+   ================================================ */
+.radius-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.radius-item {
+  border: 1px solid var(--el-color-text-300);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  background: var(--el-color-text-0);
+}
+
+.radius-preview {
+  width: 80px;
+  height: 50px;
+  background: var(--el-color-primary-200);
+  border: 2px solid var(--el-color-primary-600);
+  margin: 0 auto 12px;
+}
+
+.radius-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--el-color-text-1000);
+}
+
+.radius-value {
+  font-size: 12px;
+  color: var(--el-color-text-700);
+  margin-top: 4px;
+}
+
+/* ================================================
+   辅助色三列布局（旧，保留兼容）
+   ================================================ */
+.aux-color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.aux-color-group {
+  border: 1px solid var(--el-color-text-300);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ============================================================
+   【永久修复】VitePress Markdown 样式消毒块
+   VitePress 会对 .vp-doc 内所有原生 HTML 标签注入默认样式。
+   El Plus 组件内部使用这些标签（table/th/td/tr/ul/li），
+   会被意外污染。此块用 .vp-doc 前缀彻底重置这些干扰。
+   仅存在于文档站 custom.css，不影响开发者的实际项目。
+   ============================================================ */
+
+/* ── el-table：彻底重置 VitePress 对 table/tr/th/td 的所有注入 ── */
+.vp-doc .el-table table {
+  display: table !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  overflow-x: visible !important;
+}
+.vp-doc .el-table table tr,
+.vp-doc .el-table table tr:nth-child(2n),
+.vp-doc .el-table table tr:nth-child(odd),
+.vp-doc .el-table table tr:nth-child(even) {
+  background-color: transparent !important;
+  border: none !important;
+  border-top: none !important;
+}
+.vp-doc .el-table table th,
+.vp-doc .el-table table td {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+/* 设计规范：表头 */
+.vp-doc .el-table th.el-table__cell {
+  height: 48px !important;
+  padding: 12px 16px !important;
+  background-color: var(--el-color-primary-200) !important;
+  color: var(--el-color-text-900) !important;
+  font-weight: 500 !important;
+  box-sizing: border-box !important;
+}
+/* 设计规范：数据行 */
+.vp-doc .el-table td.el-table__cell {
+  height: 64px !important;
+  padding: 12px 16px !important;
+  background-color: #fff !important;
+  box-sizing: border-box !important;
+}
+/* 设计规范：最后一行无底部边框 */
+.vp-doc .el-table table tr:last-child td.el-table__cell {
+  border-bottom: none !important;
+}
+/* 设计规范：Hover 行 */
+.vp-doc .el-table .el-table__body tr.hover-row > td.el-table__cell {
+  background-color: var(--el-color-primary-100) !important;
+}
+/* cell 内边距重置 */
+.vp-doc .el-table .cell {
+  padding: 0 !important;
+  overflow: visible !important;
+  line-height: inherit !important;
+}
+/* wrapper 层 margin/padding 重置 */
+.vp-doc .el-table .el-table__header-wrapper,
+.vp-doc .el-table .el-table__body-wrapper,
+.vp-doc .el-table .el-scrollbar,
+.vp-doc .el-table .el-scrollbar__wrap,
+.vp-doc .el-table .el-scrollbar__view {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+/* border patch 伪元素隐藏 */
+.vp-doc .el-table .el-table__inner-wrapper::before,
+.vp-doc .el-table .el-table__inner-wrapper::after,
+.vp-doc .el-table .el-table__header-wrapper::before,
+.vp-doc .el-table .el-table__header-wrapper::after {
+  display: none !important;
+}
+
+/* ── el-menu：重置 VitePress 对 ul/li 的注入 ── */
+/* VitePress 给所有 ul 注入 padding-left:20px，给 li 注入 margin:8px 0 */
+/* el-menu--inline 是 ul 元素，必须单独清除，否则选中框宽度和缩进全部出错 */
+.vp-doc .el-menu ul,
+.vp-doc .el-menu.el-menu--inline,
+.vp-doc .el-menu .el-menu--inline {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.vp-doc .el-menu li,
+.vp-doc .el-dropdown-menu li,
+.vp-doc .el-select-dropdown__list li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  background: none !important;
+}
+/* 选中项背景色：特异性比上面的 li 消毒规则高，确保优先生效 */
+.vp-doc .el-menu .el-menu-item.is-active {
+  background-color: var(--el-color-primary-200) !important;
+}
+
+/* ── 通用：消除 VitePress 给组件内 p 标签加的 margin ── */
+.vp-doc .el-dialog p,
+.vp-doc .el-card p,
+.vp-doc .el-form p,
+.vp-doc .el-alert p {
+  margin: 0 !important;
+  line-height: inherit !important;
+}

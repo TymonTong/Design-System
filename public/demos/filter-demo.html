@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; background: transparent; padding: 24px; }
+
+    /* 数量切换控件 */
+    .demo-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--el-color-text-800);
+    }
+
+    /*
+     * 完美还原 Figma 布局：
+     * [ 筛选项(Grid) ] -16px- [ 展开按钮 ] --- 动态可用空间(最小24px) --- [ 查询按钮组 ]
+     */
+    .app-filter {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between; /* 余出空间自动放在两侧中间 */
+      gap: 24px;            /* 保证左右两侧最小 24px 间距 */
+    }
+
+    .app-filter__left {
+      /* 核心：占满剩余可用空间，让内部的 grid 能够跟着拉伸 */
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;            /* grid 与 toggle 之间固定 16px 间距 */
+      /* max-width 由 JS 动态绑定，避免拉伸过大 */
+    }
+
+    .app-filter__grid {
+      /* 核心：占满 left 的可用空间，配合 grid 列的 1fr 完美平分宽度，0 缝隙 */
+      flex: 1;
+      display: grid;
+      column-gap: 24px;
+      row-gap: 16px;
+    }
+    .app-filter__item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 318px;     /* 严格限制单个筛选项最大宽度 */
+    }
+    .app-filter__label {
+      font-size: 14px;
+      color: var(--el-color-text-800);
+      line-height: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .app-filter__ctrl {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* 展开/收起按钮 */
+    .app-filter__toggle.el-button {
+      min-height: 36px !important;
+      padding: 0 8px !important;
+      color: var(--el-color-text-700) !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      font-size: 13px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+    .app-filter__toggle.el-button:hover {
+      color: var(--el-color-primary-600) !important;
+    }
+
+    /* 按钮区：靠右对齐 */
+    .app-filter__controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      /* 移除 margin-left: auto; ，由父级的 justify-content: space-between 控制间距，消灭 DevTools 中的重复 margin */
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref, computed, onMounted, onUnmounted } = Vue
+
+    const allFilters = [
+      { label: '邮箱编号',  placeholder: '请输入' },
+      { label: '邮箱账号',  placeholder: '请输入' },
+      { label: '分组',      placeholder: '全部',  type: 'select' },
+      { label: '使用状态',  placeholder: '全部',  type: 'select' },
+      { label: '所属部门',  placeholder: '全部',  type: 'select' },
+      { label: '创建时间',  placeholder: '请选择' },
+      { label: '账号等级',  placeholder: '全部',  type: 'select' },
+      { label: '所在城市',  placeholder: '全部',  type: 'select' },
+    ]
+
+    /* 预留固定宽度用于推算 grid 可用宽度，避免循环依赖 */
+    const CONTROLS_W = 164   /* 查询+重置实际估算宽度（去除多余留白） */
+    const MIN_GAP    = 24    /* 左侧和按钮区最小间距 */
+    const TOGGLE_W   = 62    /* 展开收起按钮实际估算宽度 */
+    const LEFT_GAP   = 16    /* grid与展开按钮间距 */
+
+    const ITEM_MIN = 248
+    const ITEM_MAX = 318
+    const COL_GAP  = 24
+
+    const app = createApp({
+      setup() {
+        const filterCount    = ref(4)
+        const expanded       = ref(false)
+        const filterVals     = ref({})
+        const containerRef   = ref(null)   /* 观测容器总宽度 */
+        const containerWidth = ref(900)
+
+        let ro = null
+        onMounted(() => {
+          ro = new ResizeObserver(e => { containerWidth.value = e[0].contentRect.width })
+          if (containerRef.value) ro.observe(containerRef.value)
+        })
+        onUnmounted(() => ro?.disconnect())
+
+        const activeFilters = computed(() =>
+          allFilters.slice(0, filterCount.value).map((f, i) => ({ ...f, key: `f${i}` }))
+        )
+
+        // 动态计算中文 label 宽度（全角14px，半角7px）
+        const labelWidth = computed(() => {
+          const measure = str => { let w = 0; for (const ch of str) w += ch.charCodeAt(0) > 127 ? 14 : 7; return w }
+          return Math.max(...activeFilters.value.map(f => measure(f.label))) + 'px'
+        })
+
+        /* 
+         * 根据容器总宽度，减去右侧按钮组、中间最小间距、右侧展开按钮及其间距
+         * 得到纯 grid 可用的最大宽度，以此计算列数。
+         */
+        const gridAvail = computed(() =>
+          containerWidth.value - CONTROLS_W - MIN_GAP - TOGGLE_W - LEFT_GAP
+        )
+
+        const itemsPerRow = computed(() => {
+          const avail = gridAvail.value
+          for (let n = 4; n >= 1; n--) {
+            if ((avail - (n - 1) * COL_GAP) / n >= ITEM_MIN) return n
+          }
+          return 1
+        })
+
+        const hasMore = computed(() => activeFilters.value.length > itemsPerRow.value)
+
+        const visibleFilters = computed(() =>
+          expanded.value ? activeFilters.value : activeFilters.value.slice(0, itemsPerRow.value)
+        )
+
+        // left 容器的最大宽度，当宽度很大时，阻止其继续拉伸
+        const leftMaxWidth = computed(() => {
+          const n = itemsPerRow.value
+          return n * ITEM_MAX + (n - 1) * COL_GAP + LEFT_GAP + TOGGLE_W
+        })
+
+        // 用 1fr 让 CSS Grid 自动完美均分空间，彻底消除 JS 小数点精度导致的残留间距
+        const gridCols = computed(() =>
+          `repeat(${itemsPerRow.value}, 1fr)`
+        )
+
+        const handleReset = () => { filterVals.value = {}; expanded.value = false }
+
+        return {
+          filterCount, expanded, filterVals, containerRef,
+          activeFilters, visibleFilters, hasMore, gridCols, leftMaxWidth,
+          labelWidth, handleReset
+        }
+      },
+      template: `
+        <div>
+          <!-- 数量切换 -->
+          <div class="demo-controls">
+            <span>筛选项数量</span>
+            <el-input-number v-model="filterCount" :min="1" :max="8" :step="1" style="width:140px;" />
+          </div>
+
+          <!-- 筛选栏：left(包裹grid和toggle) + controls(靠右) -->
+          <div class="app-filter" ref="containerRef">
+
+            <!-- 筛选区：grid + toggle -->
+            <div class="app-filter__left" :style="{ maxWidth: leftMaxWidth + 'px' }">
+              <div class="app-filter__grid" :style="{ gridTemplateColumns: gridCols }">
+                <div
+                  v-for="f in visibleFilters"
+                  :key="f.key"
+                  class="app-filter__item"
+                >
+                  <span class="app-filter__label" :style="{ width: labelWidth }">{{ f.label }}</span>
+                  <el-select
+                    v-if="f.type === 'select'"
+                    v-model="filterVals[f.key]"
+                    :placeholder="f.placeholder"
+                    class="app-filter__ctrl"
+                    clearable
+                  >
+                    <el-option label="全部" value="" />
+                  </el-select>
+                  <el-input
+                    v-else
+                    v-model="filterVals[f.key]"
+                    :placeholder="f.placeholder"
+                    class="app-filter__ctrl"
+                    clearable
+                  />
+                </div>
+              </div>
+              <el-button v-if="hasMore" text class="app-filter__toggle" @click="expanded = !expanded">
+                <span>{{ expanded ? '收起' : '展开' }}</span>
+                <el-icon><component :is="expanded ? 'ArrowUp' : 'ArrowDown'" /></el-icon>
+              </el-button>
+            </div>
+
+            <!-- 按钮区 -->
+            <div class="app-filter__controls">
+              <el-button type="primary" plain :icon="'Search'">查询</el-button>
+              <el-button :icon="'RefreshLeft'" @click="handleReset">重置</el-button>
+            </div>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+
+    const sendHeight = () => {
+      parent.postMessage({ height: document.body.scrollHeight }, '*')
+    }
+    const ro = new ResizeObserver(sendHeight)
+    ro.observe(document.body)
+    sendHeight()
+  </script>
+</body>
+</html>

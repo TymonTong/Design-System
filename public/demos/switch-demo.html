@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .switch-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+    .switch-col { display: flex; flex-direction: column; gap: 16px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const val1 = ref(true)
+        const val2 = ref(false)
+        const val3 = ref(true)
+        const val4 = ref(false)
+        const val5 = ref(true)
+        const valLoading = ref(false)
+        function asyncChange() {
+          valLoading.value = true
+          setTimeout(() => { valLoading.value = false }, 1500)
+        }
+        return { val1, val2, val3, val4, val5, valLoading, asyncChange }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础开关</p>
+            <div class="switch-row">
+              <el-switch v-model="val1" />
+              <el-switch v-model="val2" />
+            </div>
+            <p class="demo-label">点击可切换开/关状态。关闭时轨道为灰色（--el-color-text-400），开启时为主色（--el-color-primary-600）。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">带文字标签</p>
+            <div class="switch-col">
+              <el-switch v-model="val3" active-text="启用" inactive-text="禁用" />
+              <el-switch v-model="val4" active-text="开" inactive-text="关" inline-prompt />
+            </div>
+            <p class="demo-label">第一行：文字显示在开关两侧，间距 8px；第二行：inline-prompt 模式，文字显示在开关轨道内部。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">禁用状态</p>
+            <div class="switch-row">
+              <el-switch v-model="val1" disabled active-text="启用（禁用态）" />
+              <el-switch v-model="val2" disabled active-text="禁用（禁用态）" />
+            </div>
+            <p class="demo-label">disabled 禁用态，开关整体透明度降低为 50%，不可点击。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">加载状态</p>
+            <el-switch v-model="val5" :loading="valLoading" active-text="加载中" @change="asyncChange" />
+            <p class="demo-label">点击开关，触发 1.5 秒模拟加载，期间显示 loading 状态，完成后正常切换。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const visibleRight  = ref(false)
+        const visibleLeft   = ref(false)
+        const visibleTop    = ref(false)
+        const visibleBottom = ref(false)
+        const visible400    = ref(false)
+        const visible600    = ref(false)
+        const visible800    = ref(false)
+        const visibleForm   = ref(false)
+        return { visibleRight, visibleLeft, visibleTop, visibleBottom, visible400, visible600, visible800, visibleForm }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础用法 · 右侧（默认）</p>
+            <el-button type="primary" @click="visibleRight = true">打开右侧抽屉</el-button>
+            <p class="demo-label">默认从右侧滑出，宽度 400px。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">四个方向</p>
+            <div class="btn-row">
+              <el-button @click="visibleLeft = true">左侧</el-button>
+              <el-button @click="visibleRight = true">右侧</el-button>
+              <el-button @click="visibleTop = true">顶部</el-button>
+              <el-button @click="visibleBottom = true">底部</el-button>
+            </div>
+            <p class="demo-label">通过 direction 属性控制滑出方向：ltr / rtl / ttb / btt。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">三种宽度</p>
+            <div class="btn-row">
+              <el-button @click="visible400 = true">400px · 轻量</el-button>
+              <el-button @click="visible600 = true">600px · 标准</el-button>
+              <el-button @click="visible800 = true">800px · 复杂</el-button>
+            </div>
+            <p class="demo-label">根据内容复杂度选择宽度，通过 size 属性设置。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">含表单的抽屉</p>
+            <el-button type="primary" @click="visibleForm = true">打开编辑面板</el-button>
+            <p class="demo-label">在抽屉内嵌入表单，底部固定操作按钮。</p>
+          </div>
+
+          <el-drawer v-model="visibleRight" title="抽屉标题" size="400px">
+            <p>这里是抽屉内容区域，可以放置详情信息、表单或操作项。</p>
+            <p style="margin-top:12px; color:var(--el-color-text-700); font-size:13px;">内容区 padding 20px，背景白色。</p>
+            <template #footer>
+              <el-button @click="visibleRight = false">取消</el-button>
+              <el-button type="primary" @click="visibleRight = false">确认</el-button>
+            </template>
+          </el-drawer>
+
+          <el-drawer v-model="visibleLeft" title="左侧抽屉" direction="ltr" size="400px">
+            <p>从左侧滑出，适合导航/侧栏场景。</p>
+          </el-drawer>
+
+          <el-drawer v-model="visibleTop" title="顶部抽屉" direction="ttb" size="40%">
+            <p>从顶部滑出，适合通知/筛选栏场景。</p>
+          </el-drawer>
+
+          <el-drawer v-model="visibleBottom" title="底部抽屉" direction="btt" size="40%">
+            <p>从底部滑出，适合移动端风格的操作面板。</p>
+          </el-drawer>
+
+          <el-drawer v-model="visible400" title="400px 轻量面板" size="400px">
+            <p>适用于查看简单详情、快速编辑 1~3 个字段。</p>
+            <template #footer>
+              <el-button @click="visible400 = false">关闭</el-button>
+              <el-button type="primary" @click="visible400 = false">保存</el-button>
+            </template>
+          </el-drawer>
+
+          <el-drawer v-model="visible600" title="600px 标准面板" size="600px">
+            <p>适用于标准详情展示或中等复杂度表单。</p>
+            <template #footer>
+              <el-button @click="visible600 = false">关闭</el-button>
+              <el-button type="primary" @click="visible600 = false">保存</el-button>
+            </template>
+          </el-drawer>
+
+          <el-drawer v-model="visible800" title="800px 复杂面板" size="800px">
+            <p>适用于复杂内容展示、多字段表单或嵌套列表。</p>
+            <template #footer>
+              <el-button @click="visible800 = false">关闭</el-button>
+              <el-button type="primary" @click="visible800 = false">保存</el-button>
+            </template>
+          </el-drawer>
+
+          <el-drawer v-model="visibleForm" title="编辑用户信息" size="600px">
+            <el-form label-width="80px" style="padding:0 4px;">
+              <el-form-item label="姓名">
+                <el-input placeholder="请输入姓名" />
+              </el-form-item>
+              <el-form-item label="部门">
+                <el-select placeholder="请选择部门" style="width:100%;">
+                  <el-option label="产品部" value="product" />
+                  <el-option label="技术部" value="tech" />
+                  <el-option label="设计部" value="design" />
+                  <el-option label="运营部" value="operation" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="职位">
+                <el-input placeholder="请输入职位名称" />
+              </el-form-item>
+              <el-form-item label="邮箱">
+                <el-input placeholder="请输入邮箱地址" />
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input type="textarea" :rows="3" placeholder="选填" />
+              </el-form-item>
+            </el-form>
+            <template #footer>
+              <el-button @click="visibleForm = false">取消</el-button>
+              <el-button type="primary" @click="visibleForm = false">保存</el-button>
+            </template>
+          </el-drawer>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

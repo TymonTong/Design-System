@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const val1 = ref('A')
+        const val2 = ref('A')
+        const val3 = ref('')
+        const val4 = ref('A')
+        return { val1, val2, val3, val4 }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础单选框</p>
+            <el-radio v-model="val1" label="A">选项 A</el-radio>
+            <el-radio v-model="val1" label="B">选项 B</el-radio>
+            <el-radio v-model="val1" label="C">选项 C</el-radio>
+            <p class="demo-label">点击可切换选中项，同组内互斥选择。按钮与文字间距 8px。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">单选框组</p>
+            <el-radio-group v-model="val2">
+              <el-radio label="A">选项 A</el-radio>
+              <el-radio label="B">选项 B</el-radio>
+              <el-radio label="C">选项 C</el-radio>
+              <el-radio label="D" disabled>选项 D（禁用）</el-radio>
+            </el-radio-group>
+            <p class="demo-label">radio-group 统一管理选中值，disabled 可单独禁用某项。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">禁用状态</p>
+            <el-radio v-model="val3" label="A" disabled>未选中禁用</el-radio>
+            <el-radio v-model="val1" label="A" disabled>选中禁用</el-radio>
+            <p class="demo-label">disabled 禁用态，视觉上圆圈和文字均变为灰色，不可操作。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">按钮样式单选</p>
+            <el-radio-group v-model="val4">
+              <el-radio-button label="A">选项 A</el-radio-button>
+              <el-radio-button label="B">选项 B</el-radio-button>
+              <el-radio-button label="C">选项 C</el-radio-button>
+              <el-radio-button label="D" disabled>禁用</el-radio-button>
+            </el-radio-group>
+            <p class="demo-label">el-radio-button 按钮样式，选中时背景填充 --el-color-primary-600，文字变白色。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

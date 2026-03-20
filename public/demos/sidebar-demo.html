@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; background: transparent; padding: 24px; }
+
+    .demo-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    /* 折叠按钮（同 topbar-demo.html，type="primary" text 绕开全局非 primary 规则） */
+    .app-collapse-btn.el-button--primary.is-text {
+      padding: 0 8px !important;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--el-color-text-700) !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .app-collapse-btn.el-button--primary.is-text:hover {
+      color: var(--el-color-primary-600) !important;
+      background: transparent !important;
+    }
+    .app-collapse-btn.el-button--primary.is-text:active {
+      color: var(--el-color-primary-700) !important;
+      background: transparent !important;
+    }
+
+    /* 演示容器：灰色背景模拟页面布局 */
+    .sidebar-frame {
+      background: var(--el-color-text-200);
+      border-radius: 8px;
+      padding: 24px;
+      display: inline-flex;
+      height: 520px;
+      align-items: flex-start;
+    }
+
+    /* 侧边栏主体 */
+    .app-sidebar {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s;
+      overflow: hidden;
+      height: 100%;
+      flex-shrink: 0;
+      border-radius: 4px;
+    }
+
+    /* Logo 区域 */
+    .app-sidebar__logo {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--el-color-text-200);
+    }
+    .app-sidebar__logo-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--el-color-text-1000);
+      white-space: nowrap;
+    }
+    .app-sidebar__logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--el-color-primary-200);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--el-color-primary-600);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* 菜单撑满剩余空间 */
+    .app-sidebar__menu.el-menu {
+      flex: 1;
+      overflow-y: auto;
+      border-right: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+
+    const menuItems = [
+      {
+        index: 's1', label: '账号管理', icon: 'User',
+        children: [
+          { index: 's1-1', label: '账号列表' },
+          {
+            index: 's1-2', label: '作品管理',
+            children: [
+              { index: 's1-2-1', label: '视频作品' },
+              { index: 's1-2-2', label: '图文作品' },
+              { index: 's1-2-3', label: '账号审核' }
+            ]
+          },
+          { index: 's1-3', label: '操作日志' }
+        ]
+      },
+      { index: 's2', label: '自动化中心', icon: 'Cpu' },
+      {
+        index: 's3', label: '任务管理', icon: 'Files',
+        children: [
+          { index: 's3-1', label: '任务列表' },
+          { index: 's3-2', label: '任务配置' }
+        ]
+      },
+      {
+        index: 's4', label: '素材管理', icon: 'PictureFilled',
+        children: [
+          { index: 's4-1', label: '图片素材' },
+          { index: 's4-2', label: '视频素材' }
+        ]
+      },
+      { index: 's5', label: '系统管理', icon: 'Setting' },
+      { index: 's6', label: '个人中心', icon: 'UserFilled' }
+    ]
+
+    const app = createApp({
+      setup() {
+        const activeIndex = ref('s1-2-1')
+        const collapsed = ref(false)
+        return { activeIndex, collapsed, menuItems }
+      },
+      template: `
+        <div>
+          <div class="demo-controls">
+            <el-button type="primary" text class="app-collapse-btn" @click="collapsed = !collapsed">
+              <el-icon><component :is="collapsed ? 'DArrowRight' : 'DArrowLeft'" /></el-icon>
+              <span>{{ collapsed ? '展开' : '收起' }}</span>
+            </el-button>
+          </div>
+
+          <div class="sidebar-frame">
+            <div class="app-sidebar" :style="{ width: collapsed ? '80px' : '240px' }">
+
+              <!-- Logo 区域 -->
+              <div class="app-sidebar__logo">
+                <div v-if="!collapsed" class="app-sidebar__logo-text">品牌名称</div>
+                <div v-else class="app-sidebar__logo-icon">B</div>
+              </div>
+
+              <!-- 导航菜单 -->
+              <el-menu
+                :default-active="activeIndex"
+                :collapse="collapsed"
+                class="app-sidebar__menu"
+                @select="val => activeIndex = val"
+              >
+                <template v-for="item in menuItems" :key="item.index">
+                  <el-sub-menu v-if="item.children" :index="item.index">
+                    <template #title>
+                      <el-icon><component :is="item.icon" /></el-icon>
+                      <span>{{ item.label }}</span>
+                    </template>
+                    <template v-for="child in item.children" :key="child.index">
+                      <el-sub-menu v-if="child.children" :index="child.index">
+                        <template #title>{{ child.label }}</template>
+                        <el-menu-item
+                          v-for="gc in child.children"
+                          :key="gc.index"
+                          :index="gc.index"
+                        >{{ gc.label }}</el-menu-item>
+                      </el-sub-menu>
+                      <el-menu-item v-else :index="child.index">{{ child.label }}</el-menu-item>
+                    </template>
+                  </el-sub-menu>
+                  <el-menu-item v-else :index="item.index">
+                    <el-icon><component :is="item.icon" /></el-icon>
+                    <template #title>{{ item.label }}</template>
+                  </el-menu-item>
+                </template>
+              </el-menu>
+
+            </div>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+
+    const sendHeight = () => {
+      parent.postMessage({ height: document.body.scrollHeight }, '*')
+    }
+    const ro = new ResizeObserver(sendHeight)
+    ro.observe(document.body)
+    sendHeight()
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .picker-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const timeVal        = ref('')
+        const dateVal        = ref('')
+        const dateMonthVal   = ref('')
+        const dateYearVal    = ref('')
+        const datetimeVal    = ref('')
+        const dateRangeVal   = ref([])
+        return { timeVal, dateVal, dateMonthVal, dateYearVal, datetimeVal, dateRangeVal }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">时间选择器</p>
+            <div class="picker-row">
+              <el-time-picker v-model="timeVal" placeholder="请选择时间" style="width:200px;" />
+              <el-time-picker v-model="timeVal" placeholder="禁用状态" style="width:200px;" disabled />
+            </div>
+            <p class="demo-label">el-time-picker：点击输入框弹出时间滚筒面板，可交互选择时:分:秒。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">日期选择器</p>
+            <div class="picker-row">
+              <el-date-picker v-model="dateVal" type="date" placeholder="选择日期" style="width:200px;" value-format="YYYY-MM-DD" />
+              <el-date-picker v-model="dateMonthVal" type="month" placeholder="选择月份" style="width:200px;" value-format="YYYY-MM" />
+              <el-date-picker v-model="dateYearVal" type="year" placeholder="选择年份" style="width:200px;" value-format="YYYY" />
+            </div>
+            <div class="picker-row" style="margin-top:12px;">
+              <el-date-picker v-model="dateVal" type="date" placeholder="禁用状态" style="width:200px;" disabled />
+            </div>
+            <p class="demo-label">type="date" 选日 / type="month" 选月 / type="year" 选年，点击可交互切换。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">日期时间选择器</p>
+            <div class="picker-row">
+              <el-date-picker v-model="datetimeVal" type="datetime" placeholder="选择日期时间" style="width:240px;" value-format="YYYY-MM-DD HH:mm:ss" />
+              <el-date-picker v-model="datetimeVal" type="datetime" placeholder="禁用状态" style="width:240px;" disabled />
+            </div>
+            <p class="demo-label">type="datetime"：右侧日历面板选日期，底部可切换时间，适合需要精确到秒的场景。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">日期范围选择</p>
+            <el-date-picker
+              v-model="dateRangeVal"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="YYYY-MM-DD"
+              style="width:320px;"
+            />
+            <p class="demo-label">type="daterange"：弹出日历同时高亮区间，适合查询时间范围筛选。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

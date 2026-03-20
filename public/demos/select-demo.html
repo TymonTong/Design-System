@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .sub-note { font-size: 12px; color: var(--el-color-text-700); margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref, computed, onMounted, onUnmounted } = Vue
+    const app = createApp({
+      setup() {
+        const valSingle    = ref('')
+        const valDisabled  = ref('选项1')
+        const valFilter    = ref('')
+        const valClearable = ref('选项1')
+        const valMultiExp  = ref(['选项1', '选项2', '选项3'])
+        const valMultiCol  = ref(['选项1', '选项2', '选项3', '选项4', '选项5', '选项6', '选项7'])
+
+        const options = [
+          { label: '选项一', value: '选项1' },
+          { label: '选项二', value: '选项2' },
+          { label: '选项三', value: '选项3' },
+          { label: '选项四（禁用）', value: '选项4', disabled: true },
+          { label: '选项五', value: '选项5' },
+          { label: '选项六', value: '选项6' },
+          { label: '选项七', value: '选项7' },
+        ]
+
+        const collapseRef   = ref(null)
+        const collapseWidth = ref(400)
+        const autoMaxCollapse = computed(() => {
+          const available = collapseWidth.value - 52
+          if (available <= 0) return 1
+          return Math.max(1, Math.floor(available / 75))
+        })
+        let collapseRO = null
+        onMounted(() => {
+          if (collapseRef.value) {
+            collapseRO = new ResizeObserver(([e]) => {
+              collapseWidth.value = e.contentRect.width
+            })
+            collapseRO.observe(collapseRef.value)
+          }
+        })
+        onUnmounted(() => collapseRO?.disconnect())
+
+        return { valSingle, valDisabled, valFilter, valClearable, valMultiExp, valMultiCol, options, collapseRef, collapseWidth, autoMaxCollapse }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础选择器</p>
+            <el-select v-model="valSingle" placeholder="请选择" style="width:240px;">
+              <el-option v-for="o in options" :key="o.value" :label="o.label" :value="o.value" :disabled="o.disabled" />
+            </el-select>
+            <p class="demo-label">单选，高度 36px，圆角 4px。含禁用选项（选项四），点击下拉可见。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可搜索</p>
+            <el-select v-model="valFilter" filterable placeholder="输入关键词筛选" style="width:240px;">
+              <el-option v-for="o in options" :key="o.value" :label="o.label" :value="o.value" :disabled="o.disabled" />
+            </el-select>
+            <p class="demo-label">filterable 可搜索，点击后直接输入可筛选。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">禁用状态</p>
+            <el-select v-model="valDisabled" disabled placeholder="禁用状态" style="width:240px;">
+              <el-option v-for="o in options" :key="o.value" :label="o.label" :value="o.value" />
+            </el-select>
+            <p class="demo-label">disabled 禁用态，背景变为 --el-color-text-100，不可操作。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可清空</p>
+            <el-select v-model="valClearable" clearable placeholder="全部" style="width:240px;">
+              <el-option v-for="o in options" :key="o.value" :label="o.label" :value="o.value" />
+            </el-select>
+            <p class="demo-label">默认已选中「选项一」，点击右侧 × 可清空。筛选栏中的所有选择器必须加此属性。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">多选 · 展开模式</p>
+            <el-select v-model="valMultiExp" multiple placeholder="请选择（可多选）" style="width:360px;">
+              <el-option v-for="o in options" :key="o.value" :label="o.label" :value="o.value" :disabled="o.disabled" />
+            </el-select>
+            <p class="demo-label">multiple 多选，已选项全部展示为 Tag，选项多时选择器高度自动增加。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">多选 · 折叠模式</p>
+            <div ref="collapseRef" style="resize:horizontal; overflow:hidden; min-width:180px; max-width:100%; padding-right:8px; padding-bottom:4px;">
+              <p class="sub-note">当前宽度 {{ Math.round(collapseWidth) }}px · 自动 max-collapse-tags = {{ autoMaxCollapse }}</p>
+              <el-select v-model="valMultiCol" multiple collapse-tags collapse-tags-tooltip :max-collapse-tags="autoMaxCollapse" placeholder="请选择" style="width:100%;">
+                <el-option v-for="o in options" :key="o.value" :label="o.label" :value="o.value" :disabled="o.disabled" />
+              </el-select>
+            </div>
+            <p class="demo-label">拖动右下角调整演示框宽度，max-collapse-tags 自动变化。悬浮 "+N" 可通过 Tooltip 查看剩余项。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">下拉面板 · 带图标</p>
+            <div style="display:inline-flex; gap:24px; align-items:flex-start;">
+              <el-dropdown trigger="click">
+                <el-button>带图标下拉<el-icon class="el-icon--right"><ArrowDown /></el-icon></el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item><el-icon><UserFilled /></el-icon>个人信息</el-dropdown-item>
+                    <el-dropdown-item><el-icon><Setting /></el-icon>系统设置</el-dropdown-item>
+                    <el-dropdown-item><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+            <p class="demo-label">所有下拉场景共用同一套面板规范，图标与文字间距 8px，条目高度 34px。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

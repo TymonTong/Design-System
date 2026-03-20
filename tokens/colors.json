@@ -1,0 +1,229 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "B端产品设计规范 · 色彩 Token · 供 AI 工具和产品团队使用",
+  "color": {
+    "primary": {
+      "$description": "品牌主色系，用于主要按钮、关键操作、链接等核心交互元素",
+      "active": {
+        "$value": "#170DA6",
+        "$type": "color",
+        "$description": "点击/Active 态，比主色更深",
+        "cssVar": "--el-color-primary-dark-2"
+      },
+      "default": {
+        "$value": "#4628FF",
+        "$type": "color",
+        "$description": "品牌主色，最高频使用",
+        "cssVar": "--el-color-primary"
+      },
+      "hover": {
+        "$value": "#757AFF",
+        "$type": "color",
+        "$description": "悬停态，比主色更浅",
+        "cssVar": "--el-color-primary-light-3"
+      },
+      "border": {
+        "$value": "#C2C4FF",
+        "$type": "color",
+        "$description": "选中态描边、聚焦边框",
+        "cssVar": "--el-color-primary-light-7"
+      },
+      "disabled": {
+        "$value": "#E8E9FF",
+        "$type": "color",
+        "$description": "禁用按钮背景色",
+        "cssVar": "--el-color-primary-light-8"
+      },
+      "tableHeader": {
+        "$value": "#EDF0FC",
+        "$type": "color",
+        "$description": "表头底色、操作按钮背景",
+        "cssVar": "--el-color-primary-light-9"
+      },
+      "tableHover": {
+        "$value": "#F7F8FC",
+        "$type": "color",
+        "$description": "表格行悬停背景"
+      }
+    },
+    "success": {
+      "$description": "成功/完成状态，绿色系",
+      "default": {
+        "$value": "#00BFA2",
+        "$type": "color",
+        "$description": "成功主色",
+        "cssVar": "--el-color-success"
+      },
+      "hover": {
+        "$value": "#4CD2BE",
+        "$type": "color",
+        "$description": "成功色悬停态",
+        "cssVar": "--el-color-success-light-3"
+      },
+      "border": {
+        "$value": "#C2F0E9",
+        "$type": "color",
+        "$description": "成功色描边",
+        "cssVar": "--el-color-success-light-7"
+      },
+      "background": {
+        "$value": "#EBFAF8",
+        "$type": "color",
+        "$description": "成功色底色背景",
+        "cssVar": "--el-color-success-light-9"
+      },
+      "active": {
+        "$value": "#009E87",
+        "$type": "color",
+        "$description": "成功色点击态",
+        "cssVar": "--el-color-success-dark-2"
+      }
+    },
+    "warning": {
+      "$description": "警告/待处理状态，黄色系",
+      "default": {
+        "$value": "#FFA100",
+        "$type": "color",
+        "$description": "警告主色",
+        "cssVar": "--el-color-warning"
+      },
+      "hover": {
+        "$value": "#FFC561",
+        "$type": "color",
+        "$description": "警告色悬停态",
+        "cssVar": "--el-color-warning-light-3"
+      },
+      "border": {
+        "$value": "#FFECCB",
+        "$type": "color",
+        "$description": "警告色描边",
+        "cssVar": "--el-color-warning-light-7"
+      },
+      "background": {
+        "$value": "#FFF8EB",
+        "$type": "color",
+        "$description": "警告色底色背景",
+        "cssVar": "--el-color-warning-light-9"
+      },
+      "active": {
+        "$value": "#CC8100",
+        "$type": "color",
+        "$description": "警告色点击态",
+        "cssVar": "--el-color-warning-dark-2"
+      }
+    },
+    "danger": {
+      "$description": "危险/错误状态，红色系",
+      "default": {
+        "$value": "#ED5153",
+        "$type": "color",
+        "$description": "危险主色",
+        "cssVar": "--el-color-danger"
+      },
+      "hover": {
+        "$value": "#F28586",
+        "$type": "color",
+        "$description": "危险色悬停态",
+        "cssVar": "--el-color-danger-light-3"
+      },
+      "border": {
+        "$value": "#FBD5D6",
+        "$type": "color",
+        "$description": "危险色描边",
+        "cssVar": "--el-color-danger-light-7"
+      },
+      "background": {
+        "$value": "#FDEAEA",
+        "$type": "color",
+        "$description": "危险色底色背景",
+        "cssVar": "--el-color-danger-light-9"
+      },
+      "active": {
+        "$value": "#BE4142",
+        "$type": "color",
+        "$description": "危险色点击态",
+        "cssVar": "--el-color-danger-dark-2"
+      }
+    },
+    "neutral": {
+      "$description": "中性色系，用于文字、边框、背景等非强调性场景",
+      "1000": {
+        "$value": "#161719",
+        "$type": "color",
+        "$description": "黑色文本、按钮文字，最高对比度",
+        "cssVar": "--el-text-color-primary"
+      },
+      "900": {
+        "$value": "#3D434E",
+        "$type": "color",
+        "$description": "深色悬停文字"
+      },
+      "800": {
+        "$value": "#59606E",
+        "$type": "color",
+        "$description": "常规正文、描述文字",
+        "cssVar": "--el-text-color-regular"
+      },
+      "700": {
+        "$value": "#8E95A3",
+        "$type": "color",
+        "$description": "辅助说明文字、次级信息",
+        "cssVar": "--el-text-color-secondary"
+      },
+      "600": {
+        "$value": "#B7BCC7",
+        "$type": "color",
+        "$description": "占位文字 Placeholder",
+        "cssVar": "--el-text-color-placeholder"
+      },
+      "500": {
+        "$value": "#CCD0D6",
+        "$type": "color",
+        "$description": "禁用态文字",
+        "cssVar": "--el-text-color-disabled"
+      },
+      "400": {
+        "$value": "#DADCE0",
+        "$type": "color",
+        "$description": "深色描边、分割线",
+        "cssVar": "--el-border-color"
+      },
+      "300": {
+        "$value": "#EBECED",
+        "$type": "color",
+        "$description": "浅色描边",
+        "cssVar": "--el-border-color-light"
+      },
+      "200": {
+        "$value": "#F7F8FA",
+        "$type": "color",
+        "$description": "极浅背景"
+      },
+      "100": {
+        "$value": "#F5F6F7",
+        "$type": "color",
+        "$description": "底色背景、禁用填充",
+        "cssVar": "--el-fill-color"
+      },
+      "white": {
+        "$value": "#FFFFFF",
+        "$type": "color",
+        "$description": "纯白，卡片背景、组件背景",
+        "cssVar": "--el-bg-color"
+      }
+    },
+    "background": {
+      "page": {
+        "$value": "#F0F2F5",
+        "$type": "color",
+        "$description": "页面大背景色",
+        "cssVar": "--el-bg-color-page"
+      },
+      "card": {
+        "$value": "#FFFFFF",
+        "$type": "color",
+        "$description": "卡片背景色"
+      }
+    }
+  }
+}

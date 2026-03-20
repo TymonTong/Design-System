@@ -1,0 +1,257 @@
+# 设计规范 AI 使用规则
+# Cursor 打开此项目后，所有对话自动遵循以下规则，无需产品经理重复说明。
+
+---
+
+## 一、项目初始化（首次使用时执行）
+
+如果当前目录没有 `package.json`，请按以下步骤初始化项目：
+
+1. 创建 Vue 3 + Vite 项目
+2. 安装依赖：`npm install element-plus @element-plus/icons-vue`
+3. 配置 `src/main.js`，内容如下：
+
+```js
+import { createApp } from 'vue'
+import App from './App.vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import './el-plus-theme.css'          // 必须在 element-plus css 之后引入
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+const app = createApp(App)
+app.use(ElementPlus)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+app.mount('#app')
+```
+
+4. 将本项目 `public/el-plus-theme.css` 复制到新项目的 `src/` 目录
+5. 将以下 4 个组件文件（位于本项目 `.vitepress/theme/components/`）复制到新项目 `src/components/` 并在 `main.js` 中全局注册：
+   - `AppSidebar.vue`
+   - `AppTopbar.vue`
+   - `AppFilter.vue`
+   - `AppStatCard.vue`
+
+---
+
+## 二、技术栈规范（每次生成代码都必须遵守）
+
+- 框架：**Vue 3**（使用 `<script setup>` 语法）
+- UI 库：**Element Plus**，所有 UI 元素必须使用 Element Plus 原生组件
+- 图标：**@element-plus/icons-vue**，图标组件直接使用，无需单独导入
+- 禁止使用其他 UI 库（不用 Ant Design、Vant、naive-ui 等）
+- 禁止用原生 `<div>` 模拟 Element Plus 已有的组件（按钮、输入框、下拉等）
+
+---
+
+## 三、样式规范（每次生成代码都必须遵守）
+
+- 所有颜色必须使用 `el-plus-theme.css` 中定义的 CSS 变量：
+  - 文字颜色：`var(--el-color-text-900)`、`var(--el-color-text-800)`、`var(--el-color-text-700)` 等
+  - 主色：`var(--el-color-primary-600)`、`var(--el-color-primary-200)` 等
+  - 背景色：`var(--el-color-text-100)` 等
+- **禁止**在代码中直接写 `#333333`、`rgba(0,0,0,0.5)` 等硬编码颜色值
+- **禁止**在组件上写 `style="color: red"` 等内联颜色样式
+- 间距、圆角优先使用 Element Plus 内置变量（`--el-border-radius-base` 等）
+
+---
+
+## 四、封装组件使用规范
+
+本项目已封装 4 个全局组件，生成页面时**直接使用，不要重新开发**。
+
+### AppSidebar — 左侧导航栏
+
+```html
+<script setup>
+import { ref } from 'vue'
+const isCollapse = ref(false)
+</script>
+
+<AppSidebar
+  :collapsed="isCollapse"
+  :menu-items="menuItems"
+/>
+```
+
+- Props：`collapsed`（Boolean）、`menuItems`（Array）、`logoFull`（String）、`logoIcon`（String）
+- 不含折叠按钮，由外部 `isCollapse` 变量控制
+- 详细说明见 `instances/sidebar-instance.md`
+
+---
+
+### AppTopbar — 右侧顶部栏
+
+```html
+<AppTopbar
+  v-model:collapsed="isCollapse"
+  :breadcrumbs="['账号管理', '账号列表']"
+  user-name="张三"
+  user-role="管理员"
+/>
+```
+
+- Props：`collapsed`（Boolean）、`breadcrumbs`（Array）、`userName`（String）、`userRole`（String）
+- 内含折叠按钮，通过 `v-model:collapsed` 与 AppSidebar 联动
+- 详细说明见 `instances/topbar-instance.md`
+
+---
+
+### AppFilter — 表格筛选栏
+
+```html
+<AppFilter
+  :filters="[
+    { label: '账号名称', placeholder: '请输入' },
+    { label: '所属分组', placeholder: '全部', type: 'select' },
+    { label: '使用状态', placeholder: '全部', type: 'select' },
+    { label: '创建时间', placeholder: '请选择' }
+  ]"
+  @search="onSearch"
+  @reset="onReset"
+/>
+```
+
+- Props：`filters`（Array，每项含 `label`、`placeholder`、可选 `type: 'select'`）
+- Events：`search`（返回各项当前值）、`reset`（清空所有值）
+- 详细说明见 `instances/filter-instance.md`
+
+---
+
+### AppStatCard — 数据统计卡片
+
+```html
+<AppStatCard
+  label="总账号数"
+  value="12,480"
+  :icon="User"
+/>
+```
+
+- Props：`label`（String）、`value`（String）、`icon`（图标组件）、`bg`（背景图 URL）、`fallback`（渐变色）
+- 多个卡片用 CSS grid 等宽排列，通常 3~4 列
+
+---
+
+## 五、后台管理页面标准布局
+
+所有后台管理页面，必须使用以下布局结构：
+
+```html
+<template>
+  <div class="layout">
+    <!-- 左侧导航 -->
+    <AppSidebar :collapsed="isCollapse" :menu-items="menuItems" />
+
+    <!-- 右侧区域 -->
+    <div class="layout__main">
+      <!-- 顶部栏 -->
+      <AppTopbar v-model:collapsed="isCollapse" :breadcrumbs="breadcrumbs" />
+
+      <!-- 内容区 -->
+      <div class="layout__content">
+        <!-- 页面内容放这里 -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<style>
+.layout {
+  display: flex;
+  height: 100vh;
+  background: #F5F6F7;
+}
+.layout__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.layout__content {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+}
+</style>
+```
+
+---
+
+## 六、基础设计规范（生成任何页面前必读）
+
+以下 4 个文件是整个设计系统的基础，生成代码时必须严格遵守：
+
+| 文件路径（本项目内） | 说明 |
+|------|------|
+| `colors.md` | 色彩规范（主色、中性色、功能色及对应 CSS 变量） |
+| `typography.md` | 字体规范（字号、行高、字重的使用规则） |
+| `spacing.md` | 间距规范（内外边距的标准值和使用场景） |
+| `border.md` | 边框与圆角规范（线宽、颜色、圆角大小） |
+
+---
+
+## 七、各 Element Plus 组件的设计规范
+
+生成具体组件时，请先阅读 `components/` 目录下对应的 `.md` 文件：
+
+| 文件路径（本项目内） | 说明 |
+|------|------|
+| `components/button.md` | 按钮规范（尺寸、类型、图标位置） |
+| `components/input.md` | 输入框规范 |
+| `components/select.md` | 下拉选择规范 |
+| `components/table.md` | 表格规范（斑马纹、边框、操作列） |
+| `components/form.md` | 表单规范（标签位置、间距、校验） |
+| `components/dialog.md` | 弹窗规范（宽度、按钮位置） |
+| `components/drawer.md` | 抽屉规范 |
+| `components/pagination.md` | 分页规范 |
+| `components/card.md` | 卡片规范 |
+| `components/tabs.md` | 标签页规范 |
+
+封装组件的用法说明位于 `instances/` 目录：
+
+| 文件路径（本项目内） | 说明 |
+|------|------|
+| `instances/sidebar-instance.md` | AppSidebar 用法 |
+| `instances/topbar-instance.md` | AppTopbar 用法 |
+| `instances/filter-instance.md` | AppFilter 用法 |
+
+封装组件的源代码位于 `.vitepress/theme/components/` 目录：
+
+| 文件路径（本项目内） | 说明 |
+|------|------|
+| `.vitepress/theme/components/AppSidebar.vue` | 左侧导航 |
+| `.vitepress/theme/components/AppTopbar.vue` | 顶部栏 |
+| `.vitepress/theme/components/AppFilter.vue` | 表格筛选 |
+| `.vitepress/theme/components/AppStatCard.vue` | 数据统计卡片 |
+
+主题样式文件位于 `public/el-plus-theme.css`
+
+---
+
+## 八、常见页面结构参考
+
+**列表页（最常见）标准结构：**
+1. 页面标题（`<el-page-header>` 或标题文字）
+2. 数据统计卡片区（若有，用 `<AppStatCard>` 4 列 grid）
+3. 筛选区（用 `<AppFilter>`）
+4. 操作栏（新增、导出等按钮，靠右）
+5. 数据表格（`<el-table>`，含分页 `<el-pagination>`）
+
+**弹窗表单标准结构：**
+- 新增/编辑操作统一用 `<el-dialog>` 弹窗
+- 表单用 `<el-form>` + `<el-form-item>`
+- 弹窗底部按钮：取消（默认）+ 确认（primary）
+
+---
+
+## 九、生成代码时的自检清单
+
+每次生成代码后，自行检查以下项目：
+- [ ] 是否使用了 Element Plus 原生组件，没有自己写 UI
+- [ ] 是否使用了 CSS 变量，没有硬编码颜色
+- [ ] 封装组件（AppSidebar/AppTopbar/AppFilter/AppStatCard）是否按规范传入 Props
+- [ ] 后台页面是否使用了标准布局结构
+- [ ] `<script setup>` 中是否正确使用了 `ref`、`computed` 等 Vue 3 API

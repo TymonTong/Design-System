@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .row-label { font-size: 13px; color: var(--el-color-text-700); width: 100px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const val1 = ref(1)
+        const val2 = ref(5)
+        const val3 = ref(10)
+        const val4 = ref(2)
+        const val5 = ref(1)
+        return { val1, val2, val3, val4, val5 }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础计数器</p>
+            <el-input-number v-model="val1" :min="0" :max="100" />
+            <p class="demo-label">点击 − / + 按钮步进，也可直接在输入框中输入数值，失焦后自动校验范围。高度 36px。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">步长设置</p>
+            <div class="row">
+              <span class="row-label">步长 5：</span>
+              <el-input-number v-model="val2" :step="5" :min="0" :max="100" />
+            </div>
+            <div class="row">
+              <span class="row-label">步长 10（严格）：</span>
+              <el-input-number v-model="val3" :step="10" step-strictly :min="0" :max="100" />
+            </div>
+            <p class="demo-label">step 设置步长；step-strictly 启用后只能输入步长倍数，输入其他值失焦后自动纠正。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">精度控制</p>
+            <el-input-number v-model="val4" :precision="2" :step="0.1" :min="0" :max="10" />
+            <p class="demo-label">precision="2" 保留两位小数，步进为 0.1。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">禁用状态</p>
+            <el-input-number v-model="val5" disabled :min="0" :max="100" />
+            <p class="demo-label">disabled 禁用，背景变为 --el-color-text-100，± 按钮和输入框均不可操作。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

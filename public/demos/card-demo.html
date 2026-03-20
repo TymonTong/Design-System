@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 16px 20px 24px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+
+    /* ── 数据统计卡片 ── */
+    .stat-card {
+      position: relative; height: 118px; border-radius: 12px;
+      overflow: hidden; box-sizing: border-box;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .stat-card__bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 0;
+    }
+    .stat-card__deco {
+      position: absolute; right: 0; top: 0;
+      width: 118px; height: 118px; object-fit: cover; z-index: 1;
+    }
+    .stat-card__label {
+      position: absolute; left: 24px; top: 24px;
+      font-size: 16px; line-height: 24px; color: var(--el-color-text-900); z-index: 2;
+    }
+    .stat-card__value {
+      position: absolute; left: 24px; top: 58px;
+      font-size: 28px; font-weight: 500; line-height: 36px;
+      color: var(--el-color-text-1000); z-index: 2;
+    }
+    .stat-card__icon {
+      position: absolute; right: 8px; bottom: 8px;
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff !important; z-index: 2;
+    }
+    .stat-card__icon .el-icon { font-size: 48px; width: 48px; height: 48px; color: #fff !important; }
+
+    .stat-card-group {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+
+    /* ── 可操作展示卡片 ── */
+    .action-card-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .action-card {
+      display: flex; flex-direction: row; align-items: flex-start; gap: 16px;
+      padding: 16px; border: 1px solid var(--el-color-text-400); border-radius: 8px;
+      background: #fff; cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-sizing: border-box;
+    }
+    .action-card:hover {
+      border-color: var(--el-color-primary-500);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+      transform: translateY(-2px);
+    }
+    .action-card__thumb {
+      flex-shrink: 0; width: 40px; height: 40px; border-radius: 8px;
+      background: var(--el-color-primary-200); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .action-card__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .action-card__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+    .action-card__header { display: flex; justify-content: space-between; align-items: center; }
+    .action-card__title {
+      font-size: 16px; font-weight: 500; line-height: 24px;
+      color: var(--el-color-text-1000);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .action-card__more.el-button {
+      flex-shrink: 0; padding: 0 !important; min-height: auto !important;
+      height: 20px !important; width: 20px !important;
+      border: none !important; outline: none !important; box-shadow: none !important;
+      background: transparent !important; color: var(--el-color-text-700) !important; font-size: 16px;
+    }
+    .action-card__more.el-button:hover,
+    .action-card__more.el-button:focus {
+      color: var(--el-color-primary-600) !important;
+      background: transparent !important; border: none !important; outline: none !important;
+    }
+    .action-card__desc {
+      font-size: 14px; line-height: 22px; color: var(--el-color-text-800);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; height: 44px;
+    }
+
+    .demo-section { margin-bottom: 40px; }
+    .demo-section h3 { font-size: 15px; font-weight: 600; color: var(--el-color-text-1000); margin: 0 0 4px; }
+    .demo-section p  { font-size: 13px; color: var(--el-color-text-700); margin: 0 0 12px; }
+    .demo-label { font-size: 12px; color: var(--el-color-text-700); margin-top: 10px; padding: 8px 12px; background: var(--el-color-text-100); border-radius: 4px; }
+    .section-divider { border: none; border-top: 1px solid var(--el-color-text-300); margin: 12px 0 32px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp } = Vue
+
+    // 内联 AppStatCard 组件
+    const AppStatCard = {
+      props: {
+        label:    { type: String, default: '数据名称' },
+        value:    { type: String, default: '0' },
+        bg:       { type: String, default: '' },
+        deco:     { type: String, default: '' },
+        fallback: { type: String, default: 'linear-gradient(135deg,#f0f0ff 0%,#dcdeff 100%)' },
+        icon:     { default: null }
+      },
+      template: `
+        <div class="stat-card" :style="{ background: fallback }">
+          <img :src="bg" class="stat-card__bg" alt="" @error="e => e.target.style.display='none'" />
+          <img :src="deco" class="stat-card__deco" alt="" @error="e => e.target.style.display='none'" />
+          <div class="stat-card__label">{{ label }}</div>
+          <div class="stat-card__value">{{ value }}</div>
+          <div class="stat-card__icon">
+            <el-icon><component :is="icon" /></el-icon>
+          </div>
+        </div>
+      `
+    }
+
+    const app = createApp({
+      components: { AppStatCard },
+      setup() {
+        const statCards = [
+          { label: '数据 1', value: '240',    bg: '/images/cards/bg-purple.png', deco: '/images/cards/deco-purple.png', fallback: 'linear-gradient(135deg,#f0f0ff 0%,#dcdeff 100%)', icon: ElementPlusIconsVue.User },
+          { label: '数据 2', value: '233.5w', bg: '/images/cards/bg-yellow.png', deco: '/images/cards/deco-yellow.png', fallback: 'linear-gradient(135deg,#fffbf0 0%,#fff0c0 100%)', icon: ElementPlusIconsVue.Warning },
+          { label: '数据 3', value: '24',     bg: '/images/cards/bg-red.png',    deco: '/images/cards/deco-red.png',    fallback: 'linear-gradient(135deg,#fff5f5 0%,#ffd6d6 100%)', icon: ElementPlusIconsVue.Monitor },
+          { label: '数据 4', value: '12',     bg: '/images/cards/bg-green.png',  deco: '/images/cards/deco-green.png',  fallback: 'linear-gradient(135deg,#f0fdf9 0%,#c2f0e8 100%)', icon: ElementPlusIconsVue.Setting }
+        ]
+        const actionCards = [
+          { id: 1, thumb: '/images/cards/action-1.png', title: '卡片名称一', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
+          { id: 2, thumb: '/images/cards/action-2.png', title: '卡片名称二', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
+          { id: 3, thumb: '/images/cards/action-3.png', title: '卡片名称三', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
+          { id: 4, thumb: '/images/cards/action-4.png', title: '卡片名称四', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' }
+        ]
+        function handleCommand(cmd, cardId) {
+          ElementPlus.ElMessage({ message: `卡片 ${cardId}：${cmd}`, type: 'info' })
+        }
+        return { statCards, actionCards, handleCommand }
+      },
+      template: `
+        <div>
+
+          <!-- ═══ 数据统计卡片 ═══ -->
+          <div class="demo-section">
+            <h3>数据统计卡片</h3>
+            <p>四种颜色主题（紫/黄/红/绿），图片缺失时自动降级为渐变色。</p>
+            <div class="stat-card-group">
+              <AppStatCard
+                v-for="card in statCards"
+                :key="card.label"
+                :label="card.label"
+                :value="card.value"
+                :bg="card.bg"
+                :deco="card.deco"
+                :fallback="card.fallback"
+                :icon="card.icon"
+              />
+            </div>
+            <div class="demo-label">400×118px，圆角 12px，卡片组间距 16px。图片缺失时显示渐变色降级（当前为降级状态，需放置背景图和装饰图至 public/images/cards/ 目录）。</div>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- ═══ 可操作展示卡片 ═══ -->
+          <div class="demo-section">
+            <h3>可操作展示卡片</h3>
+            <p>含左侧缩略图、标题、描述和操作菜单，Hover 时边框变主色并上移。</p>
+            <div class="action-card-group">
+              <div
+                v-for="card in actionCards"
+                :key="card.id"
+                class="action-card"
+              >
+                <div class="action-card__thumb">
+                  <img :src="card.thumb" alt="" @error="e => e.target.style.display='none'" />
+                </div>
+                <div class="action-card__body">
+                  <div class="action-card__header">
+                    <span class="action-card__title">{{ card.title }}</span>
+                    <el-dropdown @command="cmd => handleCommand(cmd, card.id)" @click.stop>
+                      <el-button text class="action-card__more">
+                        <el-icon><MoreFilled /></el-icon>
+                      </el-button>
+                      <template #dropdown>
+                        <el-dropdown-menu>
+                          <el-dropdown-item command="edit">编辑</el-dropdown-item>
+                          <el-dropdown-item command="copy">复制</el-dropdown-item>
+                          <el-dropdown-item command="delete" divided style="color:var(--el-color-danger);">删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                  </div>
+                  <div class="action-card__desc">{{ card.desc }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="demo-label">卡片圆角 8px，内边距 16px，卡片组间距 16px。Hover 时边框变主色（--el-color-primary-500），带轻微上浮动画。点击右上角 ⋯ 显示操作菜单。</div>
+          </div>
+
+        </div>
+      `
+    })
+
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>

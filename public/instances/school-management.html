@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>校园管理系统</title>
+  <!-- Element Plus 官方样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <!-- 团队设计主题（纯净版，适用于所有实际项目） -->
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    /* ================================================================
+       页面专属样式
+       ----------------------------------------------------------------
+       本文件只保留此页面的布局与组件内联样式。
+       所有 El Plus 组件视觉覆盖（颜色、尺寸、按钮变体等）
+       均已移至 ../el-plus-theme.css，此处不再重复。
+       ================================================================ */
+
+    /* ── 设计系统 CSS 变量（内联保底，确保 file:// 直接打开也生效） ── */
+    :root {
+      --el-color-primary-100: #F7F8FC; --el-color-primary-200: #EDF0FC;
+      --el-color-primary-300: #E8E9FF; --el-color-primary-400: #C2C4FF;
+      --el-color-primary-500: #757AFF; --el-color-primary-600: #4628FF;
+      --el-color-primary-700: #170DA6;
+      --el-color-success-400: #00BFA2; --el-color-success-300: #4CD2BE;
+      --el-color-success-200: #C2F0E9; --el-color-success-100: #EBFAF8;
+      --el-color-danger-400:  #ED5153; --el-color-danger-300:  #F28586;
+      --el-color-danger-200:  #FBD5D6; --el-color-danger-100:  #FDEAEA;
+      --el-color-warning-400: #FFA100; --el-color-warning-300: #FFC561;
+      --el-color-warning-200: #FFECCB; --el-color-warning-100: #FFF8EB;
+      --el-color-text-0:#FFF;  --el-color-text-100:#F5F6F7; --el-color-text-200:#F7F8FA;
+      --el-color-text-300:#EBECED; --el-color-text-400:#DADCE0; --el-color-text-500:#CCD0D6;
+      --el-color-text-600:#B7BCC7; --el-color-text-700:#8E95A3; --el-color-text-800:#59606E;
+      --el-color-text-900:#3D434E; --el-color-text-1000:#161719;
+      --el-color-primary:         var(--el-color-primary-600);
+      --el-color-primary-light-1: #5643FF; --el-color-primary-light-3: var(--el-color-primary-500);
+      --el-color-primary-light-7: var(--el-color-primary-400);
+      --el-color-primary-light-8: var(--el-color-primary-300);
+      --el-color-primary-light-9: var(--el-color-primary-200);
+      --el-color-primary-dark-2:  var(--el-color-primary-700);
+      --el-color-success:         var(--el-color-success-400);
+      --el-color-success-light-3: var(--el-color-success-300);
+      --el-color-success-light-7: var(--el-color-success-200);
+      --el-color-success-light-9: var(--el-color-success-100);
+      --el-color-warning:         var(--el-color-warning-400);
+      --el-color-warning-light-3: var(--el-color-warning-300);
+      --el-color-warning-light-7: var(--el-color-warning-200);
+      --el-color-warning-light-9: var(--el-color-warning-100);
+      --el-color-danger:          var(--el-color-danger-400);
+      --el-color-danger-light-3:  var(--el-color-danger-300);
+      --el-color-danger-light-7:  var(--el-color-danger-200);
+      --el-color-danger-light-9:  var(--el-color-danger-100);
+      --el-color-error:           var(--el-color-danger-400);
+      --el-color-error-light-3:   var(--el-color-danger-300);
+      --el-color-error-light-7:   var(--el-color-danger-200);
+      --el-color-error-light-9:   var(--el-color-danger-100);
+      --el-color-info:         var(--el-color-text-800);
+      --el-color-info-light-3: var(--el-color-text-600);
+      --el-color-info-light-7: var(--el-color-text-400);
+      --el-color-info-light-9: var(--el-color-text-100);
+      --el-text-color-primary: var(--el-color-text-1000);
+      --el-text-color-regular: var(--el-color-text-800);
+      --el-text-color-secondary: var(--el-color-text-700);
+      --el-text-color-placeholder: var(--el-color-text-600);
+      --el-text-color-disabled: var(--el-color-text-500);
+      --el-border-color: var(--el-color-text-400);
+      --el-border-color-light: var(--el-color-text-300);
+      --el-border-color-lighter: var(--el-color-text-100);
+      --el-border-color-extra-light: var(--el-color-text-200);
+      --el-border-color-dark: var(--el-color-text-500);
+      --el-bg-color: var(--el-color-text-0); --el-bg-color-page: #F0F2F5;
+      --el-bg-color-overlay: var(--el-color-text-0);
+      --el-fill-color: var(--el-color-text-100); --el-fill-color-light: var(--el-color-text-200);
+      --el-fill-color-blank: var(--el-color-text-0);
+      --el-font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+      --el-font-size-base: 14px; --el-font-size-small: 13px; --el-font-size-extra-small: 12px;
+      --el-border-radius-base: 4px; --el-border-radius-round: 12px; --el-border-radius-circle: 50%;
+      --el-component-size: 36px; --el-component-size-large: 40px; --el-component-size-small: 28px;
+      --el-box-shadow: 0 4px 16px 0 rgba(0,0,0,.08);
+      --el-box-shadow-light: 0 2px 8px 0 rgba(0,0,0,.06);
+      --el-transition-duration: 0.2s; --el-transition-duration-fast: 0.15s;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); }
+
+    /* ── 页面整体布局 ── */
+    .page-layout { display: flex; height: 100vh; overflow: hidden; }
+    .right-area {
+      flex: 1; min-width: 0; background: #EFF4FF;
+      display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+    }
+    .content-area { flex: 1; min-height: 0; overflow-y: auto; padding: 16px; }
+    .content-area::-webkit-scrollbar { width: 6px; }
+    .content-area::-webkit-scrollbar-track { background: transparent; }
+    .content-area::-webkit-scrollbar-thumb { background: var(--el-color-text-400); border-radius: 3px; }
+
+    /* ── AppSidebar 内联样式（来自 AppSidebar.vue，height 改为 100vh） ── */
+    .app-sidebar {
+      background: #fff; display: flex; flex-direction: column;
+      transition: width 0.3s; overflow: hidden; height: 100vh; flex-shrink: 0;
+    }
+    .app-sidebar__logo {
+      height: 56px; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; padding: 0 16px;
+    }
+    .app-sidebar__logo-full { height: 32px; width: auto; max-width: 160px; object-fit: contain; }
+    .app-sidebar__logo-icon { height: 32px; width: 32px; object-fit: contain; }
+    .app-sidebar__menu.el-menu { flex: 1; overflow-y: auto; border-right: none !important; }
+    .app-sidebar__menu .el-menu-item.is-active { background-color: var(--el-color-primary-200) !important; }
+
+    /* ── AppTopbar 内联样式（来自 AppTopbar.vue） ── */
+    .app-topbar {
+      height: 56px; background: transparent; display: flex;
+      align-items: center; justify-content: space-between;
+      padding: 0 16px; box-sizing: border-box; width: 100%;
+    }
+    .app-topbar__left { display: flex; align-items: center; }
+    .app-topbar__collapse-btn.el-button {
+      min-height: 36px !important; padding: 0 8px !important;
+      color: var(--el-color-text-700) !important; gap: 6px;
+      background: transparent !important; border: none !important;
+      box-shadow: none !important; font-size: 13px;
+    }
+    .app-topbar__collapse-btn.el-button:hover {
+      color: var(--el-color-primary-600) !important; background: transparent !important;
+    }
+    .app-topbar__divider.el-divider--vertical {
+      height: 16px !important; margin: 0 12px !important;
+      border-color: var(--el-color-text-400) !important;
+    }
+    .app-topbar__right { display: flex; align-items: center; }
+
+    /* ── AppFilter 内联样式（来自 AppFilter.vue） ── */
+    .app-filter { display: flex; align-items: flex-start; gap: 16px; }
+    .app-filter__left { flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: 12px; }
+    .app-filter__grid { display: grid; column-gap: 24px; row-gap: 16px; flex-shrink: 0; }
+    .app-filter__item { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+    .app-filter__label {
+      font-size: 14px; color: var(--el-color-text-800); line-height: 20px;
+      white-space: nowrap; flex-shrink: 0; text-align: right;
+    }
+    .app-filter__ctrl { flex: 1; min-width: 0; }
+    .app-filter__toggle.el-button {
+      min-height: 36px !important; padding: 0 8px !important;
+      color: var(--el-color-text-700) !important; background: transparent !important;
+      border: none !important; box-shadow: none !important;
+      font-size: 13px; flex-shrink: 0; align-self: flex-start;
+    }
+    .app-filter__toggle.el-button:hover { color: var(--el-color-primary-600) !important; }
+    .app-filter__controls { display: flex; align-items: center; gap: 0; flex-shrink: 0; align-self: flex-start; }
+
+    /* ── 用户头像 & 下拉 ── */
+    .user-avatar { background: var(--el-color-primary-600) !important; color: #fff !important; cursor: pointer; }
+    .user-dropdown-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+    .user-dropdown-info { display: flex; flex-direction: column; gap: 2px; }
+    .user-dropdown-name { font-size: 14px; font-weight: 500; color: var(--el-color-text-1000); }
+    .user-dropdown-role { font-size: 12px; color: var(--el-color-text-700); }
+
+    /* ── 统计卡片 ── */
+    .stat-card-group { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .stat-card { position: relative; height: 118px; border-radius: 12px; overflow: hidden; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.6); }
+    .stat-card__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .stat-card__deco { position: absolute; right: 0; top: 0; width: 118px; height: 118px; object-fit: cover; z-index: 1; }
+    .stat-card__label { position: absolute; left: 24px; top: 24px; font-size: 16px; line-height: 24px; color: var(--el-color-text-900); z-index: 2; }
+    .stat-card__value { position: absolute; left: 24px; top: 58px; font-size: 28px; font-weight: 500; line-height: 36px; color: var(--el-color-text-1000); z-index: 2; }
+    .stat-card__icon { position: absolute; right: 8px; bottom: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: #fff !important; z-index: 2; }
+    .stat-card__icon .el-icon { font-size: 48px; width: 48px; height: 48px; color: #fff !important; }
+
+    /* ── 表格内容卡片 & 按钮组 ── */
+    .table-card { background: #fff; border-radius: 12px; padding: 24px; }
+    .btn-group { display: flex; align-items: center; }
+    .selected-count { font-size: 13px; color: var(--el-color-text-700); margin-right: 12px; }
+    .selected-count em { font-style: normal; color: var(--el-color-primary-600); font-weight: 500; }
+
+    /* ── 表格内容：学生信息 & 状态 ── */
+    .student-info { display: flex; align-items: center; gap: 10px; }
+    .student-avatar { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; }
+    .student-name { font-size: 14px; font-weight: 500; color: var(--el-color-text-1000); line-height: 20px; }
+    .student-id { font-size: 12px; color: var(--el-color-text-700); line-height: 18px; }
+    .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+    /* ── 原生数据表格（替代 el-table，彻底规避 CDN 渲染问题） ── */
+    .table-container { border: 1px solid var(--el-color-text-300); border-radius: 12px; overflow: hidden; }
+    .data-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+    .data-table th {
+      height: 48px; padding: 0 16px;
+      background: var(--el-color-primary-200); color: var(--el-color-text-900);
+      font-weight: 500; font-size: 14px; text-align: left;
+      border-bottom: 1px solid var(--el-color-text-300);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .data-table td {
+      height: 64px; padding: 12px 16px;
+      color: var(--el-color-text-800); font-size: 14px;
+      border-bottom: 1px solid var(--el-color-text-300);
+      vertical-align: middle; overflow: hidden;
+      white-space: nowrap; background: #fff;
+    }
+    /* 学生信息列允许多行（头像+姓名+学号竖排） */
+    .data-table td.col-info { white-space: normal; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover td { background: var(--el-color-primary-100) !important; }
+    /* ──────────────────────────────────────────────────────
+       列宽规则：
+       · col-stu（学生信息）不设宽度 → 自动吸收剩余空间
+         避免 table-layout:fixed + width:100% 时所有列等比放大
+       · 其他列均为显式宽度，浏览器保证固定不缩放
+       · 操作列公式：左16 + 按钮28×3 + 间距12×2 + 右16 = 160px
+    ────────────────────────────────────────────────────── */
+    .data-table .col-check  { width: 48px;  text-align: center; padding: 0 8px; }
+    /* col-stu 不设 width，剩余空间全给它 */
+    .data-table .col-gender { width: 72px; }
+    .data-table .col-grade  { width: 88px; }
+    .data-table .col-cls    { width: 80px; }
+    .data-table .col-date   { width: 130px; }
+    .data-table .col-phone  { width: 160px; }
+    .data-table .col-status { width: 100px; }
+    .data-table .col-action { width: 160px; }
+    /* 勾选框 */
+    /* col-check 单元格内的 el-checkbox 居中 */
+    .col-check .el-checkbox { display: flex; align-items: center; justify-content: center; margin: 0; }
+    .col-check .el-checkbox__label { display: none; }
+    /* ── 操作列文字按钮（严格按 button.md 文字按钮规范实现）──
+       规范交互：
+         主色文字  default primary-600 | hover primary-500 | active primary-700
+         次级文字  default text-800    | hover text-700    | active text-1000
+       显式写出 hover/active，不依赖 El Plus CDN 内部变量传导 */
+    .tbl-actions { display: flex; align-items: center; white-space: nowrap; }
+    .tbl-actions .el-button { height: auto !important; }
+    .tbl-actions .el-button.is-text {
+      padding: 0 !important;
+      min-width: unset !important;
+      border-color: transparent !important;
+      background: transparent !important;
+      cursor: pointer !important;
+    }
+    /* 主色文字 hover / active */
+    .tbl-actions .el-button--primary.is-text:not(:disabled):hover  { color: var(--el-color-primary-500) !important; background: transparent !important; }
+    .tbl-actions .el-button--primary.is-text:not(:disabled):active { color: var(--el-color-primary-700) !important; background: transparent !important; }
+    /* 次级文字 hover / active */
+    .tbl-actions .el-button.is-text:not(.el-button--primary):not(:disabled):hover  { color: var(--el-color-text-700)  !important; background: transparent !important; }
+    .tbl-actions .el-button.is-text:not(.el-button--primary):not(:disabled):active { color: var(--el-color-text-1000) !important; background: transparent !important; }
+    .tbl-actions .el-button + .el-button { margin-left: 12px !important; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-layout">
+
+    <!--
+      ★ AppSidebar 组件
+      collapsed 由页面变量 isCollapse 控制（AppTopbar 里的按钮负责修改）
+      menuItems 传入校园管理系统的菜单文案（只改文案，结构与组件完全一致）
+    -->
+    <app-sidebar
+      :collapsed="isCollapse"
+      :logo-full="logoFull"
+      :logo-icon="logoIcon"
+      :menu-items="menuItems"
+    ></app-sidebar>
+
+    <div class="right-area">
+
+      <!--
+        ★ AppTopbar 组件
+        v-model:collapsed 双向绑定 isCollapse，按钮点击即控制 AppSidebar
+        breadcrumbs / userName / userRole 传入校园管理系统的文案
+      -->
+      <app-topbar
+        v-model:collapsed="isCollapse"
+        :breadcrumbs="['学籍管理', '学生花名册']"
+        user-name="王管理员"
+        user-role="系统管理员"
+      ></app-topbar>
+
+      <!-- 右侧内容区（16px padding） -->
+      <div class="content-area">
+
+        <!-- PageHeader（无返回·带操作区）规范 -->
+        <div class="ph-no-back">
+          <el-page-header content="学生花名册">
+            <template #extra>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <el-button type="primary" :icon="IconPlus">新增学生</el-button>
+                <el-button :icon="IconUpload">导入</el-button>
+                <el-button :icon="IconDownload">导出</el-button>
+              </div>
+            </template>
+          </el-page-header>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <!-- ★ AppStatCard 组件 -->
+        <div class="stat-card-group">
+          <app-stat-card
+            label="在校学生总数"
+            :value="String(totalStudents)"
+            bg="../images/cards/bg-purple.png"
+            deco="../images/cards/deco-purple.png"
+            fallback="linear-gradient(135deg,#f0f0ff,#dcdeff)"
+            icon="User"
+          ></app-stat-card>
+          <app-stat-card
+            label="在学学生"
+            :value="String(activeCount)"
+            bg="../images/cards/bg-green.png"
+            deco="../images/cards/deco-green.png"
+            fallback="linear-gradient(135deg,#f0fdf9,#c2f0e8)"
+            icon="UserFilled"
+          ></app-stat-card>
+          <app-stat-card
+            label="休学学生"
+            :value="String(leaveCount)"
+            bg="../images/cards/bg-yellow.png"
+            deco="../images/cards/deco-yellow.png"
+            fallback="linear-gradient(135deg,#fffbf0,#fff0c0)"
+            icon="Warning"
+          ></app-stat-card>
+          <app-stat-card
+            label="退学学生"
+            :value="String(dropoutCount)"
+            bg="../images/cards/bg-red.png"
+            deco="../images/cards/deco-red.png"
+            fallback="linear-gradient(135deg,#fff5f5,#ffd6d6)"
+            icon="CircleClose"
+          ></app-stat-card>
+        </div>
+
+        <div style="height:16px"></div>
+
+        <!-- 表格内容区域（白色背景，12px 圆角，24px padding） -->
+        <div class="table-card">
+
+          <!--
+            ★ AppFilter 组件
+            filters 传入校园管理系统的筛选项文案（只改文案，结构与组件完全一致）
+          -->
+          <app-filter :filters="filterDefs" @search="onSearch" @reset="onReset"></app-filter>
+
+          <div style="height:24px"></div>
+
+          <!-- 按钮组 规范 -->
+          <div class="btn-group">
+            <span class="selected-count">已选 <em>{{ selectedIds.length }}</em> 条记录</span>
+            <el-button :disabled="selectedIds.length === 0" class="btn-filled">批量毕业</el-button>
+            <el-button :disabled="selectedIds.length === 0" class="btn-filled">批量删除</el-button>
+          </div>
+
+          <div style="height:16px"></div>
+
+          <!-- 数据表格（原生 table + Vue 指令，无 CDN 渲染兼容问题） -->
+          <div class="table-container">
+            <table class="data-table">
+              <colgroup>
+                <col class="col-check" />
+                <col class="col-stu" />
+                <col class="col-gender" /><col class="col-grade" /><col class="col-cls" />
+                <col class="col-date" /><col class="col-phone" /><col class="col-status" /><col class="col-action" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th class="col-check">
+                    <el-checkbox
+                      :model-value="isAllSelected"
+                      :indeterminate="isIndeterminate"
+                      @change="toggleAll"
+                    />
+                  </th>
+                  <th>学生信息</th>
+                  <th class="col-gender">性别</th>
+                  <th class="col-grade">年级</th>
+                  <th class="col-cls">班级</th>
+                  <th class="col-date">入学日期</th>
+                  <th class="col-phone">联系电话</th>
+                  <th class="col-status">在校状态</th>
+                  <th class="col-action">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in tableData" :key="row.id">
+                  <td class="col-check">
+                    <el-checkbox
+                      :model-value="selectedIds.includes(row.id)"
+                      @change="val => onRowCheck(row.id, val)"
+                    />
+                  </td>
+                  <td class="col-info">
+                    <div class="student-info">
+                      <div class="student-avatar" :style="{ background: row.color }">{{ row.name[0] }}</div>
+                      <div>
+                        <div class="student-name">{{ row.name }}</div>
+                        <div class="student-id">{{ row.id }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <el-tag :type="row.gender==='女'?'danger':'primary'" effect="light" size="small">{{ row.gender }}</el-tag>
+                  </td>
+                  <td>{{ row.grade }}</td>
+                  <td>{{ row.cls }}</td>
+                  <td>{{ row.date }}</td>
+                  <td>{{ row.phone }}</td>
+                  <td>
+                    <el-tag :type="row.status==='在学'?'success':row.status==='休学'?'warning':'danger'" effect="light" size="small">
+                      <span class="status-dot" :style="{background:row.status==='在学'?'var(--el-color-success-400)':row.status==='休学'?'var(--el-color-warning-400)':'var(--el-color-danger-400)'}"></span>{{ row.status }}
+                    </el-tag>
+                  </td>
+                  <td>
+                    <div class="tbl-actions">
+                      <el-button type="primary" text>详情</el-button>
+                      <el-button text style="margin-left:12px">编辑</el-button>
+                      <el-button text style="margin-left:12px">删除</el-button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="height:16px"></div>
+
+          <!-- 翻页器：完整分页（含总数、每页条数、页码、跳转） -->
+          <div style="display:flex;justify-content:flex-end;align-items:center;">
+            <el-pagination
+              v-model:current-page="currentPage"
+              v-model:page-size="pageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :total="filteredStudents.length"
+              layout="total, sizes, prev, pager, next, jumper"
+            />
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+<script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+<script>
+const { createApp, ref, computed, onMounted, onUnmounted } = Vue
+
+/* =====================================================
+   ★ AppSidebar 组件定义
+   模板 + 逻辑 100% 来自 AppSidebar.vue，未做任何修改
+   图标用字符串名（CDN 模式下全局注册后可按名解析）
+===================================================== */
+const AppSidebar = {
+  name: 'AppSidebar',
+  props: {
+    collapsed: { type: Boolean, default: false },
+    logoFull:  { type: String,  default: '/images/logo/logo-full.png' },
+    logoIcon:  { type: String,  default: '/images/logo/logo-icon.png' },
+    menuItems: { type: Array,   default: () => [] }
+  },
+  setup() {
+    const activeIndex = ref('s1-1')
+    return { activeIndex }
+  },
+  template: `
+    <div class="app-sidebar" :style="{ width: collapsed ? '80px' : '240px' }">
+      <div class="app-sidebar__logo">
+        <img v-if="!collapsed" :src="logoFull" class="app-sidebar__logo-full" alt="Logo"
+          @error="e => e.target.style.display='none'" />
+        <img v-else :src="logoIcon" class="app-sidebar__logo-icon" alt="Logo"
+          @error="e => e.target.style.display='none'" />
+      </div>
+      <el-menu
+        :default-active="activeIndex"
+        :collapse="collapsed"
+        :style="collapsed ? 'width:80px' : 'width:240px'"
+        class="app-sidebar__menu"
+        @select="val => activeIndex = val"
+      >
+        <template v-for="item in menuItems" :key="item.index">
+          <el-sub-menu v-if="item.children" :index="item.index">
+            <template #title>
+              <el-icon><component :is="item.icon" /></el-icon>
+              <span>{{ item.label }}</span>
+            </template>
+            <el-menu-item
+              v-for="child in item.children"
+              :key="child.index"
+              :index="child.index"
+            >{{ child.label }}</el-menu-item>
+          </el-sub-menu>
+          <el-menu-item v-else :index="item.index">
+            <el-icon><component :is="item.icon" /></el-icon>
+            <template #title>{{ item.label }}</template>
+          </el-menu-item>
+        </template>
+      </el-menu>
+    </div>
+  `
+}
+
+/* =====================================================
+   ★ AppTopbar 组件定义
+   模板 + 逻辑 100% 来自 AppTopbar.vue，未做任何修改
+===================================================== */
+const AppTopbar = {
+  name: 'AppTopbar',
+  props: {
+    collapsed:   { type: Boolean, default: false },
+    breadcrumbs: { type: Array,   default: () => ['账号管理', '账号列表'] },
+    userName:    { type: String,  default: '张三' },
+    userRole:    { type: String,  default: '管理员' }
+  },
+  emits: ['update:collapsed'],
+  setup(props, { emit }) {
+    const toggleCollapse = () => emit('update:collapsed', !props.collapsed)
+    return { toggleCollapse }
+  },
+  template: `
+    <div class="app-topbar">
+      <div class="app-topbar__left">
+        <el-button text class="app-topbar__collapse-btn" @click="toggleCollapse">
+          <el-icon><component :is="collapsed ? 'DArrowRight' : 'DArrowLeft'" /></el-icon>
+          <span>{{ collapsed ? '展开' : '收起' }}</span>
+        </el-button>
+        <el-divider direction="vertical" class="app-topbar__divider" />
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item v-for="(item, i) in breadcrumbs" :key="i">{{ item }}</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+      <div class="app-topbar__right">
+        <el-dropdown trigger="click" placement="bottom-end">
+          <el-avatar :size="40" class="user-avatar">
+            <el-icon :size="20"><UserFilled /></el-icon>
+          </el-avatar>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <div class="user-dropdown-header">
+                <el-avatar :size="40" class="user-avatar">
+                  <el-icon :size="20"><UserFilled /></el-icon>
+                </el-avatar>
+                <div class="user-dropdown-info">
+                  <div class="user-dropdown-name">{{ userName }}</div>
+                  <div class="user-dropdown-role">{{ userRole }}</div>
+                </div>
+              </div>
+              <el-divider style="margin:4px 0;" />
+              <el-dropdown-item><el-icon><UserFilled /></el-icon>个人信息</el-dropdown-item>
+              <el-dropdown-item><el-icon><Setting /></el-icon>系统设置</el-dropdown-item>
+              <el-dropdown-item><el-icon><SwitchButton /></el-icon>退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </div>
+  `
+}
+
+/* =====================================================
+   ★ AppFilter 组件定义
+   模板 + 逻辑 100% 来自 AppFilter.vue，未做任何修改
+===================================================== */
+const AppFilter = {
+  name: 'AppFilter',
+  props: {
+    filters: {
+      type: Array,
+      default: () => [
+        { label: '邮箱编号', placeholder: '请输入' },
+        { label: '邮箱账号', placeholder: '请输入' },
+        { label: '分组',     placeholder: '全部', type: 'select' },
+        { label: '使用状态', placeholder: '全部', type: 'select' }
+      ]
+    }
+  },
+  emits: ['search', 'reset'],
+  setup(props, { emit }) {
+    const containerRef   = ref(null)
+    const containerWidth = ref(1000)
+    let ro = null
+    onMounted(() => {
+      ro = new ResizeObserver(e => { containerWidth.value = e[0].contentRect.width })
+      if (containerRef.value) ro.observe(containerRef.value)
+    })
+    onUnmounted(() => ro?.disconnect())
+
+    const activeFilters = computed(() =>
+      props.filters.map((f, i) => ({ ...f, key: `f${i}` }))
+    )
+    const filterVals = ref({})
+
+    const measureLabel = (str) => {
+      let w = 0
+      for (const ch of str) w += ch.charCodeAt(0) > 127 ? 14 : 7
+      return w
+    }
+    const labelWidth = computed(() => {
+      const max = Math.max(...activeFilters.value.map(f => measureLabel(f.label)))
+      return `${max}px`
+    })
+
+    const CONTROLS_W = 240, OUTER_GAP = 16, ITEM_MIN = 248, ITEM_MAX = 318, COL_GAP = 24
+
+    const itemsPerRow = computed(() => {
+      const avail = containerWidth.value - CONTROLS_W - OUTER_GAP
+      for (let n = 4; n >= 1; n--) {
+        if ((avail - (n - 1) * COL_GAP) / n >= ITEM_MIN) return n
+      }
+      return 1
+    })
+
+    const itemWidth = computed(() => {
+      const avail = containerWidth.value - CONTROLS_W - OUTER_GAP
+      const w = (avail - (itemsPerRow.value - 1) * COL_GAP) / itemsPerRow.value
+      return Math.min(ITEM_MAX, Math.max(ITEM_MIN, w))
+    })
+
+    const expanded     = ref(false)
+    const hasMore      = computed(() => activeFilters.value.length > itemsPerRow.value)
+    const visibleFilters = computed(() =>
+      expanded.value ? activeFilters.value : activeFilters.value.slice(0, itemsPerRow.value)
+    )
+    const gridCols = computed(() =>
+      `repeat(${itemsPerRow.value}, ${Math.round(itemWidth.value)}px)`
+    )
+
+    const handleReset = () => { filterVals.value = {}; emit('reset') }
+
+    return {
+      containerRef, filterVals, labelWidth,
+      visibleFilters, gridCols, itemWidth,
+      expanded, hasMore, handleReset,
+      Search: 'Search', RefreshLeft: 'RefreshLeft',
+      ArrowUp: 'ArrowUp', ArrowDown: 'ArrowDown'
+    }
+  },
+  template: `
+    <div class="app-filter" ref="containerRef">
+      <div class="app-filter__left">
+        <div class="app-filter__grid" :style="{ gridTemplateColumns: gridCols }">
+          <div
+            class="app-filter__item"
+            v-for="f in visibleFilters"
+            :key="f.key"
+            :style="{ width: Math.round(itemWidth) + 'px', maxWidth: '318px', minWidth: '248px' }"
+          >
+            <span class="app-filter__label" :style="{ width: labelWidth }">{{ f.label }}</span>
+            <el-select v-if="f.type === 'select'" v-model="filterVals[f.key]" :placeholder="f.placeholder" class="app-filter__ctrl" clearable>
+              <el-option label="全部" value="" />
+              <el-option v-for="opt in (f.options || [])" :key="opt" :label="opt" :value="opt" />
+            </el-select>
+            <el-input v-else v-model="filterVals[f.key]" :placeholder="f.placeholder" class="app-filter__ctrl" clearable />
+          </div>
+        </div>
+        <el-button v-if="hasMore" text class="app-filter__toggle" @click="expanded = !expanded">
+          <span>{{ expanded ? '收起' : '展开' }}</span>
+          <el-icon><component :is="expanded ? ArrowUp : ArrowDown" /></el-icon>
+        </el-button>
+      </div>
+      <div class="app-filter__controls">
+        <el-button type="primary" plain :icon="Search" @click="$emit('search', filterVals)">查询</el-button>
+        <el-button @click="handleReset">重置</el-button>
+      </div>
+    </div>
+  `
+}
+
+/* =====================================================
+   ★ AppStatCard 组件定义
+   模板 + 逻辑 100% 来自 AppStatCard.vue，未做任何修改
+===================================================== */
+const AppStatCard = {
+  name: 'AppStatCard',
+  props: {
+    label:    { type: String, default: '数据名称' },
+    value:    { type: String, default: '0' },
+    bg:       { type: String, default: '' },
+    deco:     { type: String, default: '' },
+    fallback: { type: String, default: 'linear-gradient(135deg,#f0f0ff 0%,#dcdeff 100%)' },
+    icon:     { type: String, default: null }
+  },
+  template: `
+    <div class="stat-card" :style="{ background: fallback }">
+      <img v-if="bg" :src="bg" class="stat-card__bg" alt="" @error="e => e.target.style.display='none'" />
+      <img v-if="deco" :src="deco" class="stat-card__deco" alt="" @error="e => e.target.style.display='none'" />
+      <div class="stat-card__label">{{ label }}</div>
+      <div class="stat-card__value">{{ value }}</div>
+      <div v-if="icon" class="stat-card__icon">
+        <el-icon><component :is="icon" /></el-icon>
+      </div>
+    </div>
+  `
+}
+
+/* =====================================================
+   页面 App
+===================================================== */
+const app = createApp({
+  components: { AppSidebar, AppTopbar, AppFilter, AppStatCard },
+  setup() {
+    const isCollapse = ref(false)
+    const logoFull = ref('../images/logo/logo-full.png')
+    const logoIcon = ref('../images/logo/logo-icon.png')
+
+    const menuItems = ref([
+      { index: 's1', label: '学籍管理', icon: 'User',
+        children: [
+          { index: 's1-1', label: '学生花名册' },
+          { index: 's1-2', label: '新生入学' },
+          { index: 's1-3', label: '毕业管理' }
+        ]
+      },
+      { index: 's2', label: '班级管理', icon: 'Folder',
+        children: [
+          { index: 's2-1', label: '班级列表' },
+          { index: 's2-2', label: '班级统计' }
+        ]
+      },
+      { index: 's3', label: '成绩管理', icon: 'EditPen',
+        children: [
+          { index: 's3-1', label: '成绩录入' },
+          { index: 's3-2', label: '成绩查询' }
+        ]
+      }
+    ])
+
+    // ── 生成 200 名学生数据 ──
+    const surnames   = ['张','李','王','刘','陈','杨','赵','黄','周','吴','徐','孙','胡','朱','高','林','何','郭','马','罗']
+    const maleNames  = ['伟','强','磊','洋','勇','军','杰','明','超','浩','宇','鑫','博','豪','志','涛','峰','远']
+    const femaleNames= ['芳','娜','敏','静','丽','艳','燕','雪','婷','晶','彤','琪','瑶','悦','慧','曦','云','蕾']
+    const gradeNames = ['一年级','二年级','三年级','四年级','五年级','六年级']
+    const gradeYears = [2024, 2023, 2022, 2021, 2020, 2019]
+    const clsNames   = ['甲班','乙班','丙班']
+    const phonePre   = ['138','156','177','189','136','152','173','159']
+    const avatarClrs = ['#4628FF','#00BFA2','#FFA100','#ED5153','#757AFF']
+
+    const allStudents = []
+    for (let i = 0; i < 200; i++) {
+      const gender    = i % 2 === 0 ? '男' : '女'
+      const surname   = surnames[Math.floor(i / 2) % surnames.length]
+      const givenName = gender === '男' ? maleNames[i % maleNames.length] : femaleNames[i % femaleNames.length]
+      const gradeIdx  = i % 6
+      const grade     = gradeNames[gradeIdx]
+      const cls       = clsNames[i % 3]
+      const year      = gradeYears[gradeIdx]
+      const seq       = String(i + 1).padStart(4, '0')
+      const status    = i % 20 < 17 ? '在学' : i % 20 < 19 ? '休学' : '退学'
+      allStudents.push({
+        id:     `${year}${seq}`,
+        name:   surname + givenName,
+        gender, grade, cls,
+        major:  '',
+        date:   `${year}-09-01`,
+        phone:  `${phonePre[i % 8]} **** ${String(1000 + (i * 37) % 9000)}`,
+        status,
+        color:  avatarClrs[i % avatarClrs.length]
+      })
+    }
+
+    // ── 统计卡片数值（固定，allStudents 不变）──
+    const totalStudents = allStudents.length  // 200
+    const activeCount   = allStudents.filter(s => s.status === '在学').length  // 170
+    const leaveCount    = allStudents.filter(s => s.status === '休学').length  // 20
+    const dropoutCount  = allStudents.filter(s => s.status === '退学').length  // 10
+
+    // ── 筛选状态 ──
+    const activeFilter = ref({ name: '', grade: '', cls: '', status: '', gender: '' })
+    const filteredStudents = computed(() =>
+      allStudents.filter(s => {
+        const kw = activeFilter.value.name.trim()
+        if (kw && !s.name.includes(kw) && !s.id.includes(kw)) return false
+        if (activeFilter.value.grade  && s.grade  !== activeFilter.value.grade)  return false
+        if (activeFilter.value.cls    && !s.cls.includes(activeFilter.value.cls)) return false
+        if (activeFilter.value.status && s.status !== activeFilter.value.status) return false
+        if (activeFilter.value.gender && s.gender !== activeFilter.value.gender) return false
+        return true
+      })
+    )
+
+    // ── 分页 ──
+    const currentPage = ref(1)
+    const pageSize    = ref(10)
+    const tableData   = computed(() => {
+      const start = (currentPage.value - 1) * pageSize.value
+      return filteredStudents.value.slice(start, start + pageSize.value)
+    })
+
+    // ── 勾选逻辑 ──
+    const selectedIds    = ref([])
+    const isAllSelected  = computed(() =>
+      tableData.value.length > 0 && tableData.value.every(r => selectedIds.value.includes(r.id))
+    )
+    const isIndeterminate = computed(() =>
+      tableData.value.some(r => selectedIds.value.includes(r.id)) && !isAllSelected.value
+    )
+    const toggleAll = (checked) => {
+      const pageIds = new Set(tableData.value.map(r => r.id))
+      if (checked) {
+        tableData.value.forEach(r => { if (!selectedIds.value.includes(r.id)) selectedIds.value.push(r.id) })
+      } else {
+        selectedIds.value = selectedIds.value.filter(id => !pageIds.has(id))
+      }
+    }
+    const onRowCheck = (id, checked) => {
+      if (checked) {
+        if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+      } else {
+        const idx = selectedIds.value.indexOf(id)
+        if (idx > -1) selectedIds.value.splice(idx, 1)
+      }
+    }
+
+    // ── 筛选项定义（含下拉选项）──
+    const filterDefs = ref([
+      { label: '学号/姓名', placeholder: '请输入' },
+      { label: '年级', placeholder: '全部', type: 'select',
+        options: ['一年级','二年级','三年级','四年级','五年级','六年级'] },
+      { label: '班级', placeholder: '请输入' },
+      { label: '状态', placeholder: '全部', type: 'select',
+        options: ['在学','休学','退学'] },
+      { label: '性别', placeholder: '全部', type: 'select',
+        options: ['男','女'] }
+    ])
+
+    const onSearch = (vals) => {
+      activeFilter.value = {
+        name:   vals.f0 || '',
+        grade:  vals.f1 || '',
+        cls:    vals.f2 || '',
+        status: vals.f3 || '',
+        gender: vals.f4 || ''
+      }
+      currentPage.value = 1
+    }
+    const onReset = () => {
+      activeFilter.value = { name: '', grade: '', cls: '', status: '', gender: '' }
+      currentPage.value = 1
+    }
+
+    const IconPlus     = ElementPlusIconsVue.Plus
+    const IconUpload   = ElementPlusIconsVue.Upload
+    const IconDownload = ElementPlusIconsVue.Download
+
+    return {
+      isCollapse, logoFull, logoIcon, menuItems,
+      totalStudents, activeCount, leaveCount, dropoutCount,
+      filteredStudents, filterDefs, onSearch, onReset,
+      currentPage, pageSize, selectedIds, isAllSelected, isIndeterminate, toggleAll, onRowCheck, tableData,
+      IconPlus, IconUpload, IconDownload
+    }
+  }
+})
+
+app.use(ElementPlus)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+app.mount('#app')
+</script>
+</body>
+</html>

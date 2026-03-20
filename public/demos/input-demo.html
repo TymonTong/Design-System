@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-label { font-size: 13px; color: var(--el-color-text-700); margin-top: 8px; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+    .input-col { display: flex; flex-direction: column; gap: 12px; }
+    .input-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const valBase1     = ref('')
+        const valBase2     = ref('已有内容示例')
+        const valSearch    = ref('')
+        const valLink      = ref('')
+        const valPrepend   = ref('')
+        const valAppend    = ref('')
+        const valClear     = ref('可以点右侧 × 清空我')
+        const valPwd       = ref('')
+        const valTextarea1 = ref('')
+        const valTextarea2 = ref('')
+        const valLimit1    = ref('')
+        const valLimitArea = ref('')
+        return { valBase1, valBase2, valSearch, valLink, valPrepend, valAppend, valClear, valPwd, valTextarea1, valTextarea2, valLimit1, valLimitArea }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">基础输入框</p>
+            <div class="input-col">
+              <el-input v-model="valBase1" placeholder="请输入内容" style="width:320px;" />
+              <el-input v-model="valBase2" placeholder="请输入内容" style="width:320px;" />
+              <el-input placeholder="禁用状态" disabled style="width:320px;" />
+            </div>
+            <p class="demo-label">默认高度 36px，圆角 4px，字号 14px。点击可输入，第二行预置了内容，第三行为禁用状态。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">带图标的输入框</p>
+            <div class="input-col">
+              <el-input v-model="valSearch" placeholder="搜索关键词" style="width:320px;">
+                <template #prefix><el-icon><Search /></el-icon></template>
+              </el-input>
+              <el-input v-model="valLink" placeholder="请输入链接" style="width:320px;">
+                <template #suffix><el-icon><Link /></el-icon></template>
+              </el-input>
+            </div>
+            <p class="demo-label">prefix / suffix 插槽，图标使用 Element Plus 图标库。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">密码输入框</p>
+            <el-input v-model="valPwd" type="password" show-password placeholder="请输入密码" style="width:320px;" />
+            <p class="demo-label">点击右侧眼睛图标可切换密码可见状态，交互由 Element Plus 内置提供。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可清空</p>
+            <el-input v-model="valClear" clearable placeholder="可点击清空" style="width:320px;" />
+            <p class="demo-label">添加 clearable 属性，输入内容后右侧出现 × 清空图标，点击可清空。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">前缀 / 后缀附加内容</p>
+            <div class="input-col">
+              <el-input v-model="valPrepend" placeholder="请输入网址" style="width:320px;">
+                <template #prepend>https://</template>
+              </el-input>
+              <el-input v-model="valAppend" placeholder="请输入金额" style="width:320px;">
+                <template #append>元</template>
+              </el-input>
+            </div>
+            <p class="demo-label">prepend / append 插槽，用于添加协议前缀、单位后缀等。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">禁用 & 只读</p>
+            <div class="input-col">
+              <el-input value="禁用状态的文本内容" disabled style="width:320px;" />
+              <el-input value="只读状态的文本内容" readonly style="width:320px;" />
+            </div>
+            <p class="demo-label">disabled 禁用（不可交互）/ readonly 只读（可选中文本但不可编辑）。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">文本域</p>
+            <div class="input-col">
+              <el-input v-model="valTextarea1" type="textarea" placeholder="请输入多行文本内容" :rows="4" style="width:420px;" />
+              <el-input v-model="valTextarea2" type="textarea" placeholder="自动高度文本域，输入后自动撑开（最小 36px）" :autosize="{ minRows: 1 }" style="width:420px;" />
+            </div>
+            <p class="demo-label">type="textarea"，固定行数用 :rows，自适应高度用 :autosize="{ minRows: 1 }"。</p>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">字数限制</p>
+            <div class="input-col">
+              <el-input v-model="valLimit1" maxlength="20" show-word-limit placeholder="最多输入 20 个字" style="width:320px;" />
+              <el-input v-model="valLimitArea" type="textarea" maxlength="30" show-word-limit placeholder="文本域，最多输入 30 个字" :autosize="{ minRows: 2 }" style="width:420px;" />
+            </div>
+            <p class="demo-label">普通输入框计数显示在右侧；文本域计数显示在右下角。超出限制后无法继续输入。</p>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

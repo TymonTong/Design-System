@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 16px 20px 24px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+
+    .user-avatar.el-avatar {
+      width: 40px !important; height: 40px !important;
+      background-color: var(--el-color-primary-200) !important;
+      color: var(--el-color-primary-600) !important;
+      cursor: pointer; transition: box-shadow 0.2s; flex-shrink: 0;
+    }
+    .user-avatar.el-avatar:hover {
+      box-shadow: 0 0 0 2px var(--el-color-primary-500) !important;
+    }
+    .user-dropdown-header {
+      padding: 8px 12px;
+    }
+    .user-dropdown-info  { display: flex; flex-direction: column; gap: 4px; }
+    .user-dropdown-name  { font-size: 14px; font-weight: 500; color: var(--el-color-text-1000); line-height: 20px; }
+    .user-dropdown-role  { font-size: 12px; color: var(--el-color-text-700); line-height: 16px; }
+
+    .demo-section { margin-bottom: 32px; }
+    .demo-section h3 { font-size: 15px; font-weight: 600; color: var(--el-color-text-1000); margin: 0 0 4px; }
+    .demo-section p  { font-size: 13px; color: var(--el-color-text-700); margin: 0 0 12px; }
+    .demo-label { font-size: 12px; color: var(--el-color-text-700); margin-top: 10px; padding: 8px 12px; background: var(--el-color-text-100); border-radius: 4px; }
+    .section-divider { border: none; border-top: 1px solid var(--el-color-text-300); margin: 12px 0 32px; }
+  </style>
+  <!-- 让 el-dropdown popper 样式能在 body 中正常工作 -->
+  <!-- 此 <style> 排在所有 <link> 之后，特异性更高，可稳定覆盖 El Plus 动态注入的样式 -->
+  <style id="popper-override">
+    .user-dropdown-popper { width: 220px !important; min-width: 220px !important; }
+
+    /* 条目高度统一 40px：用 box-sizing:border-box 让 padding 算在内，同时清零上下 padding */
+    .user-dropdown-popper .el-dropdown-menu__item {
+      height: 40px !important;
+      box-sizing: border-box !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    .user-dropdown-popper .el-dropdown-menu__item .el-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      flex-shrink: 0;
+    }
+    .user-dropdown-popper .el-dropdown-menu__item:not(.is-disabled):hover,
+    .user-dropdown-popper .el-dropdown-menu__item:not(.is-disabled):focus {
+      background-color: var(--el-color-text-100) !important;
+      color: var(--el-color-text-900) !important;
+    }
+    .user-dropdown-popper .el-dropdown-menu__item:not(.is-disabled):hover .el-icon,
+    .user-dropdown-popper .el-dropdown-menu__item:not(.is-disabled):focus .el-icon {
+      color: var(--el-color-text-900) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp } = Vue
+
+    const app = createApp({
+      setup() { return {} },
+      template: `
+        <div>
+
+          <!-- ═══ 基础用法 ═══ -->
+          <div class="demo-section">
+            <h3>基础用法</h3>
+            <p>点击头像触发下拉面板。头像 40×40px，圆形，Hover 时出现 2px 主色描边。</p>
+            <div style="padding:32px 24px; background:var(--el-color-text-200); border-radius:8px; display:inline-flex; align-items:center;">
+              <el-dropdown trigger="click" placement="bottom-end" popper-class="user-dropdown-popper">
+                <el-avatar :size="40" class="user-avatar">
+                  <el-icon :size="20"><UserFilled /></el-icon>
+                </el-avatar>
+                <template #dropdown>
+                  <el-dropdown-menu class="user-dropdown">
+                    <div class="user-dropdown-header">
+                      <div class="user-dropdown-info">
+                        <div class="user-dropdown-name">张三</div>
+                        <div class="user-dropdown-role">管理员</div>
+                      </div>
+                    </div>
+                    <el-divider style="margin:0 12px 8px; width:calc(100% - 24px);" />
+                    <el-dropdown-item>
+                      <el-icon><UserFilled /></el-icon>个人信息
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-icon><Setting /></el-icon>系统设置
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-icon><SwitchButton /></el-icon>退出系统
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+            <div class="demo-label">click 触发，placement="bottom-end" 右对齐。面板顶部展示头像 + 姓名 + 角色，下方三个操作项均带图标。悬浮头像可见主色描边。</div>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- ═══ 头像尺寸 & 颜色 ═══ -->
+          <div class="demo-section">
+            <h3>头像尺寸与颜色规范</h3>
+            <p>头像尺寸固定 40×40px，背景色 --el-color-primary-200，图标色 --el-color-primary-600。</p>
+            <div style="display:flex; gap:24px; align-items:center; padding:20px 24px; background:var(--el-color-text-200); border-radius:8px;">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                <el-avatar :size="40" class="user-avatar">
+                  <el-icon :size="20"><UserFilled /></el-icon>
+                </el-avatar>
+                <span style="font-size:11px;color:var(--el-color-text-700);">Default</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                <el-avatar :size="40" class="user-avatar" style="box-shadow:0 0 0 2px var(--el-color-primary-500);">
+                  <el-icon :size="20"><UserFilled /></el-icon>
+                </el-avatar>
+                <span style="font-size:11px;color:var(--el-color-text-700);">Hover</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `
+    })
+
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>

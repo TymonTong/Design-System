@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 16px 20px 24px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+    .demo-section { margin-bottom: 24px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 10px; }
+    .demo-label { font-size: 12px; color: var(--el-color-text-700); margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp } = Vue
+    const app = createApp({
+      setup() { return {} },
+      template: `
+        <div>
+
+          <!-- 基础用法（/ 分隔符） -->
+          <div class="demo-section">
+            <p class="demo-title">基础用法（/ 分隔符）</p>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item>首页</el-breadcrumb-item>
+              <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+              <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+              <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            </el-breadcrumb>
+            <p class="demo-label">
+              默认 separator="/"；最后一项为末级，颜色加深不可点击；前面的层级颜色较浅，Hover 变为主色。
+            </p>
+          </div>
+
+          <!-- 图标分隔符 -->
+          <div class="demo-section">
+            <p class="demo-title">图标分隔符（ArrowRight）</p>
+            <el-breadcrumb>
+              <template #separator>
+                <el-icon style="vertical-align: middle; color: var(--el-color-text-500);"><ArrowRight /></el-icon>
+              </template>
+              <el-breadcrumb-item>首页</el-breadcrumb-item>
+              <el-breadcrumb-item>账号管理</el-breadcrumb-item>
+              <el-breadcrumb-item>账号列表</el-breadcrumb-item>
+            </el-breadcrumb>
+            <p class="demo-label">
+              通过 #separator 插槽替换分隔符为 el-icon，颜色使用 text-500 Token。
+            </p>
+          </div>
+
+          <!-- 层级较少（2级） -->
+          <div class="demo-section">
+            <p class="demo-title">较少层级（2 级）</p>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item>首页</el-breadcrumb-item>
+              <el-breadcrumb-item>设置</el-breadcrumb-item>
+            </el-breadcrumb>
+            <p class="demo-label">
+              建议面包屑层级不超过 4 级；最少 2 级（含当前页）。
+            </p>
+          </div>
+
+          <!-- 较多层级（4级，最大推荐） -->
+          <div class="demo-section">
+            <p class="demo-title">较多层级（4 级，推荐上限）</p>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item>首页</el-breadcrumb-item>
+              <el-breadcrumb-item>系统设置</el-breadcrumb-item>
+              <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+              <el-breadcrumb-item>角色配置详情</el-breadcrumb-item>
+            </el-breadcrumb>
+            <p class="demo-label">
+              4 级为推荐上限，超出时可折叠中间层级。
+            </p>
+          </div>
+
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>

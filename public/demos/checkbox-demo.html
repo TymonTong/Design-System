@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 16px 20px 24px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+    .demo-section { margin-bottom: 28px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 10px; }
+    .demo-label { font-size: 12px; color: var(--el-color-text-700); margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+
+    const app = createApp({
+      setup() {
+        // 1. 单个多选框 — 独立 boolean ref
+        const singleCheck = ref(false)
+
+        // 2. 多选框组 — 独立数组 ref
+        const groupVal = ref(['A'])
+        const groupOptions = [
+          { label: '选项 A', value: 'A' },
+          { label: '选项 B', value: 'B' },
+          { label: '选项 C', value: 'C' },
+          { label: '选项 D（禁用）', value: 'D', disabled: true },
+        ]
+
+        // 3. 全选 / 半选 — 纯 ref + 显式事件处理，避免 computed 在 CDN 字符串模板中的时序问题
+        const allVals = ['A', 'B', 'C', 'D']
+        const indetermOptions = [
+          { label: '选项 A', value: 'A' },
+          { label: '选项 B', value: 'B' },
+          { label: '选项 C', value: 'C' },
+          { label: '选项 D', value: 'D' },
+        ]
+        const val2     = ref(['A', 'C'])  // 初始：选中 A + C
+        const chkAll   = ref(false)       // 初始：非全选
+        const isIndet  = ref(true)        // 初始：部分选中 → 半选
+
+        // checkbox-group 任意项变更时触发，同步全选框状态
+        function syncAll(newArr) {
+          const n = newArr.length
+          if (n === 0) {
+            chkAll.value  = false
+            isIndet.value = false
+          } else if (n === allVals.length) {
+            chkAll.value  = true
+            isIndet.value = false
+          } else {
+            chkAll.value  = false
+            isIndet.value = true
+          }
+        }
+
+        // 点击全选框时触发
+        function toggleAll(checked) {
+          val2.value    = checked ? [...allVals] : []
+          chkAll.value  = checked
+          isIndet.value = false
+        }
+
+        // 4. 按钮样式多选 — 独立数组 ref
+        const btnGroupVal = ref(['A'])
+
+        return {
+          singleCheck,
+          groupVal, groupOptions,
+          val2, indetermOptions, chkAll, isIndet, syncAll, toggleAll,
+          btnGroupVal,
+        }
+      },
+      template: `
+        <div>
+
+          <!-- 单个多选框 -->
+          <div class="demo-section">
+            <p class="demo-title">基础多选框</p>
+            <el-checkbox v-model="singleCheck">单个多选框</el-checkbox>
+            <p class="demo-label">单独使用，v-model 绑定 Boolean，点击切换选中状态。当前：{{ singleCheck ? '已选中' : '未选中' }}</p>
+          </div>
+
+          <!-- 多选框组 -->
+          <div class="demo-section">
+            <p class="demo-title">多选框组</p>
+            <el-checkbox-group v-model="groupVal">
+              <el-checkbox v-for="o in groupOptions" :key="o.value" :value="o.value" :disabled="o.disabled">{{ o.label }}</el-checkbox>
+            </el-checkbox-group>
+            <p class="demo-label">checkbox-group 绑定数组，支持多个同时选中，可单独禁用某项。</p>
+          </div>
+
+          <!-- 全选与半选 -->
+          <div class="demo-section">
+            <p class="demo-title">全选与半选（Indeterminate）</p>
+            <!-- :model-value 单向绑定 + @change 显式处理，避免 v-model 与 @change 双重更新冲突 -->
+            <el-checkbox :model-value="chkAll" :indeterminate="isIndet" @change="toggleAll">全选</el-checkbox>
+            <el-divider style="margin:8px 0;" />
+            <el-checkbox-group v-model="val2" @change="syncAll">
+              <el-checkbox v-for="o in indetermOptions" :key="o.value" :value="o.value">{{ o.label }}</el-checkbox>
+            </el-checkbox-group>
+            <p class="demo-label">
+              初始选中 A + C → 全选框显示半选（横线）。点击全选框切换全选/全不选；点击任意选项后全选框状态同步更新。
+            </p>
+          </div>
+
+          <!-- 禁用状态 -->
+          <div class="demo-section">
+            <p class="demo-title">禁用状态</p>
+            <el-checkbox :model-value="false" disabled>未选中禁用</el-checkbox>
+            <el-checkbox :model-value="true" disabled>选中禁用</el-checkbox>
+            <p class="demo-label">disabled 禁用，方框和文字均变为灰色，不可操作。</p>
+          </div>
+
+          <!-- 按钮样式多选 -->
+          <div class="demo-section">
+            <p class="demo-title">按钮样式多选</p>
+            <el-checkbox-group v-model="btnGroupVal">
+              <el-checkbox-button value="A">选项 A</el-checkbox-button>
+              <el-checkbox-button value="B">选项 B</el-checkbox-button>
+              <el-checkbox-button value="C">选项 C</el-checkbox-button>
+              <el-checkbox-button value="D" disabled>禁用</el-checkbox-button>
+            </el-checkbox-group>
+            <p class="demo-label">el-checkbox-button 按钮样式，选中时背景填充主色，支持多个同时选中。</p>
+          </div>
+
+        </div>
+      `
+    })
+
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>

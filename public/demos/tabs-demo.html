@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: var(--el-font-family); font-size: 14px; color: var(--el-color-text-800); padding: 24px; background: transparent; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section:last-child { margin-bottom: 0; }
+    .demo-title { font-size: 13px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 12px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp, ref } = Vue
+    const app = createApp({
+      setup() {
+        const activeTab1 = ref('tab1')
+        const activeTab2 = ref('tab1')
+        const activeTab3 = ref('tab1')
+        const editableTabs = ref([
+          { title: '标签一', name: 'tab1', content: '标签一的内容' },
+          { title: '标签二', name: 'tab2', content: '标签二的内容' },
+          { title: '标签三', name: 'tab3', content: '标签三的内容' },
+        ])
+        let tabIndex = editableTabs.value.length
+        const addTab = () => {
+          tabIndex++
+          editableTabs.value.push({ title: `新标签 ${tabIndex}`, name: `tab${tabIndex}`, content: `新标签 ${tabIndex} 的内容` })
+          activeTab3.value = `tab${tabIndex}`
+        }
+        const removeTab = (name) => {
+          const tabs = editableTabs.value
+          if (activeTab3.value === name) {
+            const idx = tabs.findIndex(t => t.name === name)
+            activeTab3.value = tabs[idx + 1]?.name || tabs[idx - 1]?.name || ''
+          }
+          editableTabs.value = tabs.filter(t => t.name !== name)
+        }
+        return { activeTab1, activeTab2, activeTab3, editableTabs, addTab, removeTab }
+      },
+      template: `
+        <div>
+          <div class="demo-section">
+            <p class="demo-title">线条型（默认）</p>
+            <el-tabs v-model="activeTab1">
+              <el-tab-pane label="用户管理" name="tab1">用户管理页面内容</el-tab-pane>
+              <el-tab-pane label="配置管理" name="tab2">配置管理页面内容</el-tab-pane>
+              <el-tab-pane label="角色管理" name="tab3">角色管理页面内容</el-tab-pane>
+              <el-tab-pane label="定时任务" name="tab4">定时任务页面内容</el-tab-pane>
+            </el-tabs>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">卡片型</p>
+            <el-tabs v-model="activeTab2" type="card">
+              <el-tab-pane label="用户管理" name="tab1">用户管理页面内容</el-tab-pane>
+              <el-tab-pane label="配置管理" name="tab2">配置管理页面内容</el-tab-pane>
+              <el-tab-pane label="角色管理" name="tab3">角色管理页面内容</el-tab-pane>
+              <el-tab-pane label="定时任务" name="tab4">定时任务页面内容</el-tab-pane>
+            </el-tabs>
+          </div>
+          <div class="demo-section">
+            <p class="demo-title">可增删标签页</p>
+            <el-tabs v-model="activeTab3" type="card" closable @tab-add="addTab" @tab-remove="removeTab">
+              <template #add-icon>
+                <el-icon><Plus /></el-icon>
+              </template>
+              <el-tab-pane
+                v-for="tab in editableTabs"
+                :key="tab.name"
+                :label="tab.title"
+                :name="tab.name"
+              >{{ tab.content }}</el-tab-pane>
+            </el-tabs>
+          </div>
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component)
+    }
+    app.mount('#app')
+    window.addEventListener('load', () => {
+      setTimeout(() => parent.postMessage({ height: document.body.scrollHeight }, '*'), 100)
+    })
+  </script>
+</body>
+</html>

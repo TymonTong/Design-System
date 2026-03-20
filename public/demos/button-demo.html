@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="../el-plus-theme.css" />
+  <style>
+    body { margin: 0; padding: 16px 20px 32px; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; }
+
+    /* ── 自定义按钮变体（与 el-plus-theme.css 同步） ── */
+    .btn-filled.el-button {
+      --el-button-bg-color:              var(--el-color-text-100);
+      --el-button-text-color:            var(--el-color-text-800);
+      --el-button-border-color:          transparent;
+      --el-button-hover-bg-color:        var(--el-color-text-300);
+      --el-button-hover-text-color:      var(--el-color-text-800);
+      --el-button-hover-border-color:    transparent;
+      --el-button-active-bg-color:       var(--el-color-text-400);
+      --el-button-active-text-color:     var(--el-color-text-800);
+      --el-button-active-border-color:   transparent;
+      --el-button-disabled-bg-color:     var(--el-color-text-100);
+      --el-button-disabled-text-color:   var(--el-color-text-500);
+      --el-button-disabled-border-color: transparent;
+    }
+    .btn-ghost.el-button {
+      --el-button-bg-color:              var(--el-color-text-0);
+      --el-button-text-color:            var(--el-color-text-800);
+      --el-button-border-color:          var(--el-color-text-400);
+      --el-button-hover-bg-color:        var(--el-color-primary-100);
+      --el-button-hover-text-color:      var(--el-color-primary-600);
+      --el-button-hover-border-color:    var(--el-color-primary-400);
+      --el-button-active-bg-color:       var(--el-color-primary-200);
+      --el-button-active-text-color:     var(--el-color-primary-600);
+      --el-button-active-border-color:   var(--el-color-primary-600);
+      --el-button-disabled-bg-color:     var(--el-color-text-0);
+      --el-button-disabled-text-color:   var(--el-color-text-500);
+      --el-button-disabled-border-color: var(--el-color-text-400);
+    }
+    .link-secondary {
+      --el-link-text-color:          var(--el-color-text-800);
+      --el-link-hover-text-color:    var(--el-color-primary-600);
+      --el-link-disabled-text-color: var(--el-color-text-500);
+    }
+    .link-always-underline .el-link__inner { border-bottom: 1px solid; }
+
+    /* ── 大分类标题 ── */
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 32px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--el-color-primary-400);
+    }
+    .category-header:first-child { margin-top: 0; }
+    .category-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      background: var(--el-color-primary-600);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .category-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--el-color-text-1000);
+    }
+    .category-desc {
+      font-size: 13px;
+      color: var(--el-color-text-700);
+      margin-left: auto;
+    }
+
+    /* ── 单个按钮类型区块 ── */
+    .demo-section { margin-bottom: 32px; }
+    .demo-section h3 { font-size: 14px; font-weight: 600; color: var(--el-color-text-900); margin: 0 0 4px; }
+    .demo-section p  { font-size: 12px; color: var(--el-color-text-700); margin: 0 0 10px; }
+
+    /* 交互预览条：实色按钮用浅主色背景，文字/链接按钮用白色背景 */
+    .btn-preview {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--el-color-text-300);
+      border-radius: 6px 6px 0 0;
+    }
+    .btn-preview.bg-primary { background: var(--el-color-primary-100); }
+    .btn-preview.bg-white   { background: #fff; }
+    .preview-label { font-size: 11px; color: var(--el-color-text-700); flex-shrink: 0; }
+
+    /* 四格状态网格 */
+    .state-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--el-color-text-300); border-top: none;
+      border-radius: 0 0 6px 6px; overflow: hidden;
+    }
+    .state-cell {
+      padding: 12px; background: #fff;
+      border-right: 1px solid var(--el-color-text-300);
+    }
+    .state-cell:last-child { border-right: none; }
+    .swatch-btn {
+      display: flex; align-items: center; justify-content: center;
+      height: 36px; padding: 0 12px; border-radius: 4px;
+      font-size: 13px; white-space: nowrap; box-sizing: border-box;
+      width: 100%; margin-bottom: 8px;
+    }
+    .swatch-text {
+      display: inline-flex; align-items: center;
+      height: 36px; padding: 0 2px;
+      font-size: 14px; margin-bottom: 8px;
+    }
+    .swatch-link {
+      font-size: 14px; display: block;
+      min-height: 28px; line-height: 28px; margin-bottom: 8px;
+    }
+    .state-label { font-size: 11px; font-weight: 700; color: var(--el-color-text-1000); margin-bottom: 5px; }
+    .token-row   { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 2px; }
+    .token-name  { font-size: 10px; color: var(--el-color-text-700); flex-shrink: 0; }
+    .token-val   { font-size: 9px; color: var(--el-color-primary-600); background: var(--el-color-primary-200); padding: 1px 4px; border-radius: 2px; word-break: break-all; text-align: right; }
+    .code-hint   { margin-top: 6px; padding: 8px 12px; background: var(--el-color-text-100); border-radius: 4px; font-family: monospace; font-size: 12px; color: var(--el-color-text-800); }
+
+    /* 链接小标题 */
+    .sub-title { font-size: 12px; font-weight: 600; color: var(--el-color-text-800); margin: 14px 0 8px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue/dist/index.iife.min.js"></script>
+  <script>
+    const { createApp } = Vue
+    const app = createApp({
+      setup() {
+        return { SearchIcon: ElementPlusIconsVue.Search }
+      },
+      template: `
+        <div>
+
+          <!-- ════════════════════════════════════
+               一、主要按钮（5 种）
+               ════════════════════════════════════ -->
+          <div class="category-header">
+            <span class="category-num">一</span>
+            <span class="category-name">主要按钮</span>
+            <span class="category-desc">5 种，承载不同视觉权重，前 3 种用原生 type，后 2 种覆盖 CSS 变量实现</span>
+          </div>
+
+          <!-- 主要按钮 -->
+          <div class="demo-section">
+            <h3>主要按钮</h3>
+            <p>最强视觉优先级，每个操作区最多出现一个。</p>
+            <div class="btn-preview bg-primary">
+              <span class="preview-label">交互预览：</span>
+              <el-button type="primary">按钮</el-button>
+              <el-button type="primary" :icon="SearchIcon">带图标按钮</el-button>
+              <el-button type="primary" disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-600);color:#fff;">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-500);color:#fff;">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-500</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-700);color:#fff;">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-700</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-400);color:#fff;opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-400</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button type="primary"&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+          <!-- 次要按钮 -->
+          <div class="demo-section">
+            <h3>次要按钮</h3>
+            <p>主色系轮廓按钮，Hover 时变为实色。</p>
+            <div class="btn-preview bg-primary">
+              <span class="preview-label">交互预览：</span>
+              <el-button type="primary" plain>按钮</el-button>
+              <el-button type="primary" plain :icon="SearchIcon">带图标按钮</el-button>
+              <el-button type="primary" plain disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-200);color:var(--el-color-primary-600);border:1px solid var(--el-color-primary-400);">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">描边</span><code class="token-val">primary-400</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-600);color:#fff;border:1px solid var(--el-color-primary-600);">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-700);color:#fff;border:1px solid var(--el-color-primary-700);">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-700</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-200);color:var(--el-color-primary-400);border:1px solid var(--el-color-primary-400);opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-400</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button type="primary" plain&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+          <!-- 默认按钮 -->
+          <div class="demo-section">
+            <h3>默认按钮</h3>
+            <p>白色背景，灰色边框，Hover 时呈现主色感知。</p>
+            <div class="btn-preview bg-primary">
+              <span class="preview-label">交互预览：</span>
+              <el-button>按钮</el-button>
+              <el-button :icon="SearchIcon">带图标按钮</el-button>
+              <el-button disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:#fff;color:var(--el-color-text-800);border:1px solid var(--el-color-text-400);">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">描边</span><code class="token-val">text-400</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-200);color:var(--el-color-primary-600);border:1px solid var(--el-color-primary-400);">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">primary-200</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-200);color:var(--el-color-primary-600);border:1px solid var(--el-color-primary-600);">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">描边</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:#fff;color:var(--el-color-text-500);border:1px solid var(--el-color-text-400);opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-500</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+          <!-- 填充按钮 -->
+          <div class="demo-section">
+            <h3>填充按钮</h3>
+            <p>一级灰底色，低调辅助操作，通过 CSS 变量覆盖实现（class="btn-filled"）。</p>
+            <div class="btn-preview bg-primary">
+              <span class="preview-label">交互预览：</span>
+              <el-button class="btn-filled">按钮</el-button>
+              <el-button class="btn-filled" disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-text-100);color:var(--el-color-text-800);">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">text-100</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-text-300);color:var(--el-color-text-800);">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">text-300</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-text-400);color:var(--el-color-text-800);">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">背景</span><code class="token-val">text-400</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-text-100);color:var(--el-color-text-500);opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-500</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button class="btn-filled"&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+          <!-- 幽灵按钮 -->
+          <div class="demo-section">
+            <h3>幽灵按钮</h3>
+            <p>Hover / Active 时仅边框和文字变为主色，背景始终白色（class="btn-ghost"）。</p>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-button class="btn-ghost">按钮</el-button>
+              <el-button class="btn-ghost" disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:#fff;color:var(--el-color-text-800);border:1px solid var(--el-color-text-400);">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">描边</span><code class="token-val">text-400</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-100);color:var(--el-color-primary-600);border:1px solid var(--el-color-primary-400);">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">描边</span><code class="token-val">primary-400</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:var(--el-color-primary-200);color:var(--el-color-primary-600);border:1px solid var(--el-color-primary-600);">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">描边</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-btn" style="background:#fff;color:var(--el-color-text-500);border:1px solid var(--el-color-text-400);opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-500</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button class="btn-ghost"&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+
+          <!-- ════════════════════════════════════
+               二、文字按钮（2 种）
+               ════════════════════════════════════ -->
+          <div class="category-header">
+            <span class="category-num">二</span>
+            <span class="category-name">文字按钮</span>
+            <span class="category-desc">无背景无边框，用 &lt;el-button text&gt; 实现</span>
+          </div>
+
+          <!-- 主色文字按钮 -->
+          <div class="demo-section">
+            <h3>主色文字按钮</h3>
+            <p>主色系文字，适用于表格操作列、弹窗内次要操作。</p>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-button type="primary" text>按钮</el-button>
+              <el-button type="primary" text disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-primary-600);">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-primary-500);">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-500</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-primary-700);">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-700</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-primary-400);opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-400</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button type="primary" text&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+          <!-- 次级文字按钮 -->
+          <div class="demo-section">
+            <h3>次级文字按钮</h3>
+            <p>灰色文字，Active 时加深，适合低强调场景。</p>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-button text>按钮</el-button>
+              <el-button text disabled>按钮（禁用）</el-button>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-text-800);">按钮</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-800</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-text-700);">按钮</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-700</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-text-1000);">按钮</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-1000</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-text" style="color:var(--el-color-text-500);opacity:0.8;cursor:not-allowed;">按钮</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-500</code></div>
+              </div>
+            </div>
+            <div class="code-hint">&lt;el-button text&gt;按钮&lt;/el-button&gt;</div>
+          </div>
+
+
+          <!-- ════════════════════════════════════
+               三、文字链接（4 种）
+               ════════════════════════════════════ -->
+          <div class="category-header">
+            <span class="category-num">三</span>
+            <span class="category-name">文字链接</span>
+            <span class="category-desc">用 &lt;el-link&gt; 实现，分主色 / 次级，各有无下划线两种</span>
+          </div>
+
+          <!-- 主色链接 -->
+          <div class="demo-section">
+            <h3>主色文字链接</h3>
+            <div class="sub-title">无下划线（默认）</div>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-link type="primary">链接</el-link>
+              <el-link type="primary" disabled>链接（禁用）</el-link>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-primary-600);">链接</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-primary-500);border-bottom:1px solid var(--el-color-primary-500);">链接</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-500</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-primary-500);border-bottom:1px solid var(--el-color-primary-500);">链接</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-500</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-primary-400);opacity:0.8;cursor:not-allowed;">链接</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-400</code></div>
+              </div>
+            </div>
+            <div class="sub-title" style="margin-top:14px;">带下划线</div>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-link type="primary" class="link-always-underline">链接</el-link>
+              <el-link type="primary" class="link-always-underline" disabled>链接（禁用）</el-link>
+            </div>
+            <div class="code-hint">&lt;el-link type="primary"&gt;链接&lt;/el-link&gt;</div>
+          </div>
+
+          <!-- 次级链接 -->
+          <div class="demo-section">
+            <h3>次级文字链接</h3>
+            <div class="sub-title">无下划线（默认）</div>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-link class="link-secondary">链接</el-link>
+              <el-link class="link-secondary" disabled>链接（禁用）</el-link>
+            </div>
+            <div class="state-grid">
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-text-800);">链接</div>
+                <div class="state-label">Default</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-800</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-primary-600);border-bottom:1px solid var(--el-color-primary-600);">链接</div>
+                <div class="state-label">Hover</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-primary-600);border-bottom:1px solid var(--el-color-primary-600);">链接</div>
+                <div class="state-label">Active</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">primary-600</code></div>
+              </div>
+              <div class="state-cell">
+                <div class="swatch-link" style="color:var(--el-color-text-500);opacity:0.8;cursor:not-allowed;">链接</div>
+                <div class="state-label">Disabled</div>
+                <div class="token-row"><span class="token-name">文字</span><code class="token-val">text-500</code></div>
+              </div>
+            </div>
+            <div class="sub-title" style="margin-top:14px;">带下划线</div>
+            <div class="btn-preview bg-white">
+              <span class="preview-label">交互预览：</span>
+              <el-link class="link-secondary link-always-underline">链接</el-link>
+              <el-link class="link-secondary link-always-underline" disabled>链接（禁用）</el-link>
+            </div>
+            <div class="code-hint">&lt;el-link class="link-secondary"&gt;链接&lt;/el-link&gt;</div>
+          </div>
+
+        </div>
+      `
+    })
+    app.use(ElementPlus)
+    Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp))
+    app.mount('#app')
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'iframe-height', height: document.documentElement.scrollHeight }, '*')
+    }
+    window.addEventListener('load', sendHeight)
+    new MutationObserver(sendHeight).observe(document.body, { subtree: true, childList: true, attributes: true })
+  </script>
+</body>
+</html>
