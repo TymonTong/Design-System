@@ -152,20 +152,17 @@
           <div class="sidebar-frame">
             <div class="app-sidebar" :style="{ width: collapsed ? '80px' : '240px' }">
 
-              <!-- Logo 区域：图片加载失败时自动隐藏 -->
-              <div
-                v-if="(collapsed && !logoIconError) || (!collapsed && !logoFullError)"
-                class="app-sidebar__logo"
-              >
+              <!-- Logo 区域：始终保留固定高度，图片缺失时内部为空 -->
+              <div class="app-sidebar__logo">
                 <img
-                  v-if="!collapsed"
+                  v-if="!collapsed && !logoFullError"
                   src="/images/logo/logo-full.png"
                   class="app-sidebar__logo-full"
                   alt="Logo"
                   @error="logoFullError = true"
                 />
                 <img
-                  v-else
+                  v-if="collapsed && !logoIconError"
                   src="/images/logo/logo-icon.png"
                   class="app-sidebar__logo-icon"
                   alt="Logo"

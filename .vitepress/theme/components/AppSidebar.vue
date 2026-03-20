@@ -1,19 +1,16 @@
 <template>
   <div class="app-sidebar" :style="{ width: collapsed ? '80px' : '240px' }">
-    <!-- Logo 区域：仅在当前状态的图片加载成功时显示 -->
-    <div
-      v-if="(collapsed && !logoIconError) || (!collapsed && !logoFullError)"
-      class="app-sidebar__logo"
-    >
+    <!-- Logo 区域：始终保留固定高度，图片缺失时内部为空 -->
+    <div class="app-sidebar__logo">
       <img
-        v-if="!collapsed"
+        v-if="!collapsed && !logoFullError"
         :src="logoFull"
         class="app-sidebar__logo-full"
         alt="Logo"
         @error="logoFullError = true"
       />
       <img
-        v-else
+        v-if="collapsed && !logoIconError"
         :src="logoIcon"
         class="app-sidebar__logo-icon"
         alt="Logo"

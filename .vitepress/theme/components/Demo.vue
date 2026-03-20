@@ -9,7 +9,7 @@
     </div>
     <iframe
       ref="iframeRef"
-      :src="src"
+      :src="fullSrc"
       :style="{ height: iframeHeight }"
       scrolling="no"
       @load="onLoad"
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   src:    { type: String, required: true },
@@ -27,6 +27,14 @@ const props = defineProps({
 
 const iframeRef    = ref(null)
 const iframeHeight = ref(props.height)
+
+// 本地 BASE_URL='/'，GitHub Pages BASE_URL='/Design-System/'
+// 自动拼接，避免 iframe 在线上 404
+const fullSrc = computed(() => {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+  const path = props.src.startsWith('/') ? props.src : `/${props.src}`
+  return `${base}${path}`
+})
 
 // 接收 demo 文件通过 postMessage 上报的实际高度，自动撑开 iframe
 const onMessage = (e) => {
