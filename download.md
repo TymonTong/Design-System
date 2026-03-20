@@ -3,6 +3,15 @@
 产品经理使用 Cursor 生成原型时，需要将交付包解压后用 Cursor 打开文件夹。  
 交付包在每次规范更新发布后自动重新生成，始终是最新版本。
 
+<script setup>
+import { ref, onMounted } from 'vue'
+const isLocal = ref(false)
+onMounted(() => {
+  const h = window.location.hostname
+  isLocal.value = h === 'localhost' || h === '127.0.0.1' || h === ''
+})
+</script>
+
 <div class="download-section">
   <div class="download-card">
     <div class="download-card__icon">📦</div>
@@ -15,9 +24,14 @@
         · 26 个组件规范文档 &nbsp;· 3 个封装组件说明 &nbsp;· .cursorrules
       </div>
     </div>
-    <a class="download-btn" href="./设计规范交付包.zip" download>
-      ⬇ 下载交付包
-    </a>
+    <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+      <a
+        :class="['download-btn', { 'is-local': isLocal }]"
+        :href="isLocal ? undefined : './设计规范交付包.zip'"
+        :download="isLocal ? undefined : '设计规范交付包.zip'"
+      >⬇ 下载交付包</a>
+      <div v-if="isLocal" class="download-local-tip">本地预览不提供下载</div>
+    </div>
   </div>
 </div>
 
@@ -98,6 +112,18 @@
   transition: background 0.2s;
 }
 .download-btn:hover { background: var(--vp-c-brand-2); }
+.download-btn.is-local {
+  background: var(--vp-c-gray-2);
+  color: var(--vp-c-text-3) !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.download-local-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--vp-c-text-3);
+  text-align: center;
+}
 
 .steps { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
 .step {
