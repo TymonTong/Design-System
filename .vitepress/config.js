@@ -1,7 +1,8 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: '/Design-System/',   // 必须与 GitHub 仓库名完全一致（区分大小写）
+  // 本地开发用 '/'，GitHub Actions 构建时自动切换为 '/Design-System/'
+  base: process.env.GITHUB_ACTIONS ? '/Design-System/' : '/',
   title: '设计规范',
   description: 'B端产品设计规范文档系统 · 基于 Element Plus',
   lang: 'zh-CN',

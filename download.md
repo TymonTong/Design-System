@@ -15,7 +15,7 @@
         · 26 个组件规范文档 &nbsp;· 3 个封装组件说明 &nbsp;· .cursorrules
       </div>
     </div>
-    <a class="download-btn" href="/Design-System/设计规范交付包.zip" download>
+    <a class="download-btn" href="./设计规范交付包.zip" download>
       ⬇ 下载交付包
     </a>
   </div>
