@@ -33,6 +33,14 @@ app.mount('#app')
    - `AppTopbar.vue`
    - `AppFilter.vue`
    - `AppStatCard.vue`
+6. 创建 Logo 图片目录（使用 `AppSidebar` 时必须执行）：
+   ```
+   public/images/logo/
+   ```
+   目录创建后留空即可，Logo 图片由设计师/产品提供后放入：
+   - `logo-full.png`：侧边栏**展开**时显示，建议尺寸 ≤ 160×40，透明背景
+   - `logo-icon.png`：侧边栏**折叠**时显示，建议尺寸 40×40，透明背景
+   > 图片未放入时，Logo 区域自动隐藏，菜单正常显示，不报错。
 
 ---
 

@@ -1,11 +1,24 @@
 <template>
   <div class="app-sidebar" :style="{ width: collapsed ? '80px' : '240px' }">
-    <!-- Logo 区域 -->
-    <div class="app-sidebar__logo">
-      <img v-if="!collapsed" :src="logoFull" class="app-sidebar__logo-full" alt="Logo"
-        @error="e => e.target.style.display='none'" />
-      <img v-else :src="logoIcon" class="app-sidebar__logo-icon" alt="Logo"
-        @error="e => e.target.style.display='none'" />
+    <!-- Logo 区域：仅在当前状态的图片加载成功时显示 -->
+    <div
+      v-if="(collapsed && !logoIconError) || (!collapsed && !logoFullError)"
+      class="app-sidebar__logo"
+    >
+      <img
+        v-if="!collapsed"
+        :src="logoFull"
+        class="app-sidebar__logo-full"
+        alt="Logo"
+        @error="logoFullError = true"
+      />
+      <img
+        v-else
+        :src="logoIcon"
+        class="app-sidebar__logo-icon"
+        alt="Logo"
+        @error="logoIconError = true"
+      />
     </div>
 
     <!-- 导航菜单 -->
@@ -49,6 +62,9 @@
 <script setup>
 import { ref } from 'vue'
 import { User, Cpu, Files, PictureFilled, Setting } from '@element-plus/icons-vue'
+
+const logoFullError = ref(false)
+const logoIconError = ref(false)
 
 defineProps({
   collapsed: {
@@ -136,11 +152,12 @@ const activeIndex = ref('s1-2-1')
   width: 32px;
   object-fit: contain;
 }
-/* 菜单撑满剩余空间，无右侧边框 */
+/* 菜单撑满剩余空间，无右侧边框，无顶部分割线 */
 .app-sidebar__menu.el-menu {
   flex: 1;
   overflow-y: auto;
   border-right: none !important;
+  border-top: none !important;
 }
 /* 选中状态背景 */
 .app-sidebar__menu .el-menu-item.is-active {
