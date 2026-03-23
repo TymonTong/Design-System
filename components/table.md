@@ -44,7 +44,7 @@
     <el-table-column prop="name"    label="姓名"  width="100" />
     <el-table-column prop="dept"    label="部门"  width="120" />
     <el-table-column prop="address" label="地址" />
-    <el-table-column label="操作" width="160">
+    <el-table-column label="操作" width="216">
       <template #default="{ row }">
         <div class="tbl-actions">
           <el-button type="primary" text>编辑</el-button>

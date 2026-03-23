@@ -33,14 +33,23 @@ app.mount('#app')
    - `AppTopbar.vue`
    - `AppFilter.vue`
    - `AppStatCard.vue`
-6. 创建 Logo 图片目录（使用 `AppSidebar` 时必须执行）：
+6. 图片资源（**交付包已内置，解压即可使用，无需手动创建**）：
+
+   交付包的 `public/images/` 目录中已包含所有组件所需图片：
    ```
-   public/images/logo/
+   public/
+   └── images/
+       ├── logo/          ← AppSidebar Logo 图片（留空，放入你的 Logo 文件）
+       │   ├── logo-full.png   展开时显示，建议 ≤ 160×40，透明背景
+       │   └── logo-icon.png   折叠时显示，建议 40×40，透明背景
+       └── cards/         ← AppStatCard 卡片图片（已内置，直接可用）
+           ├── bg-purple.png / deco-purple.png
+           ├── bg-yellow.png / deco-yellow.png
+           ├── bg-red.png    / deco-red.png
+           └── bg-green.png  / deco-green.png
    ```
-   目录创建后留空即可，Logo 图片由设计师/产品提供后放入：
-   - `logo-full.png`：侧边栏**展开**时显示，建议尺寸 ≤ 160×40，透明背景
-   - `logo-icon.png`：侧边栏**折叠**时显示，建议尺寸 40×40，透明背景
-   > 图片未放入时，Logo 区域自动隐藏，菜单正常显示，不报错。
+   - **卡片图片**：已打包在交付包中，引用 `AppStatCard` 立即呈现标准视觉效果
+   - **Logo 图片**：目录已创建，将你的 Logo 文件放入对应路径即可显示；未放入时 Logo 区域保留高度但内容为空
 
 ---
 
@@ -87,6 +96,12 @@ const isCollapse = ref(false)
 - Props：`collapsed`（Boolean）、`menuItems`（Array）、`logoFull`（String）、`logoIcon`（String）
 - 不含折叠按钮，由外部 `isCollapse` 变量控制
 - 详细说明见 `instances/sidebar-instance.md`
+
+> **每次生成使用了 `AppSidebar` 的页面后，必须主动提示用户：**
+> "左侧区域支持展示项目 Logo，请将 Logo 图片放入以下路径：
+> - `public/images/logo/logo-full.png`（侧边栏展开时显示，建议尺寸 ≤ 160×40，透明背景）
+> - `public/images/logo/logo-icon.png`（侧边栏折叠时显示，建议尺寸 40×40，透明背景）
+> 放入后刷新页面即可，无需修改代码。暂不放入时 Logo 区域保留空白，不影响菜单使用。"
 
 ---
 

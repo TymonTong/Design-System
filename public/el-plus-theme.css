@@ -158,6 +158,8 @@
   height: 36px;
   padding: 0 12px;
   border-radius: 6px;
+  /* gap 统一管理图标与文字间距：覆盖裸文本/span/el-icon 三种写法，比 margin-left 更可靠 */
+  gap: 8px;
 }
 .el-button.is-text {
   height: 36px;
@@ -167,10 +169,10 @@
 .el-button + .el-button {
   margin-left: 0 !important;
 }
-/* 图标与文字间距 */
+/* 旧 margin-left 方案已由 gap 替代，此处清零防止双倍间距 */
 .el-button [class*="el-icon"] + span,
 .el-button .el-icon + span {
-  margin-left: 8px !important;
+  margin-left: 0 !important;
 }
 
 /* ── 文字按钮全局规范：无背景无边框，仅文字颜色变化 ──
@@ -183,6 +185,7 @@
 .el-button--primary.is-text:not(.is-disabled):hover  { color: var(--el-color-primary-500) !important; }
 .el-button--primary.is-text:not(.is-disabled):active { color: var(--el-color-primary-700) !important; }
 /* 次级文字按钮（无 type）：default text-800 → hover text-700 → active text-1000 */
+.el-button.is-text:not(.el-button--primary):not(.is-disabled)        { color: var(--el-color-text-800)  !important; }
 .el-button.is-text:not(.el-button--primary):not(.is-disabled):hover  { color: var(--el-color-text-700)  !important; }
 .el-button.is-text:not(.el-button--primary):not(.is-disabled):active { color: var(--el-color-text-1000) !important; }
 
@@ -492,10 +495,11 @@
   display: none !important;
 }
 
-/* 操作列按钮容器：flex 横排 */
+/* 操作列按钮容器：flex 横排，gap 统一所有子元素间距（el-button / el-dropdown 均适用） */
 .tbl-actions {
   display: flex;
   align-items: center;
+  gap: 12px;
   white-space: nowrap;
 }
 
@@ -663,8 +667,4 @@
   color: var(--el-color-text-500) !important;
 }
 
-/* ── 表格操作列按钮间距 ── */
-/* 操作列容器：flex 布局，按钮之间均匀间隔 12px */
-.tbl-actions { display: flex; align-items: center; }
-/* 文字按钮紧跟下拉触发器时补间距 */
-.tbl-actions .el-button + .el-dropdown { margin-left: 12px; }
+/* ── 表格操作列按钮间距由 gap 统一管理，无需此处手动补丁 ── */

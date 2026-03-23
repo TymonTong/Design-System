@@ -31,6 +31,9 @@ output.on('close', () => {
 
 archive.pipe(output)
 
+// ── 0. 图片资源（组件直接依赖，解压即可使用）────────────────────
+archive.directory(path.join(root, 'public/images'), 'public/images')
+
 // ── 1. AI 规则 & 说明文档 ──────────────────────────────────────
 archive.file(path.join(root, '.cursorrules'), { name: '.cursorrules' })
 archive.file(path.join(root, 'README.md'),    { name: 'README.md' })

@@ -21,7 +21,8 @@ onMounted(() => {
       <div class="download-card__files">
         · el-plus-theme.css &nbsp;· AppSidebar / Topbar / Filter / StatCard.vue<br/>
         · colors / typography / spacing / border 规范<br/>
-        · 26 个组件规范文档 &nbsp;· 3 个封装组件说明 &nbsp;· .cursorrules
+        · 26 个组件规范文档 &nbsp;· 3 个封装组件说明 &nbsp;· .cursorrules<br/>
+        · public/images/cards/（卡片图片，开箱即用）&nbsp;· public/images/logo/（Logo 占位目录）
       </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">

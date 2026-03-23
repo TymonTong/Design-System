@@ -144,14 +144,14 @@
               <div class="app-sidebar__logo">
                 <img
                   v-if="!collapsed && !logoFullError"
-                  src="/images/logo/logo-full.png"
+                  src="../images/logo/logo-full.png"
                   class="app-sidebar__logo-full"
                   alt="Logo"
                   @error="logoFullError = true"
                 />
                 <img
                   v-if="collapsed && !logoIconError"
-                  src="/images/logo/logo-icon.png"
+                  src="../images/logo/logo-icon.png"
                   class="app-sidebar__logo-icon"
                   alt="Logo"
                   @error="logoIconError = true"

@@ -129,16 +129,16 @@
       components: { AppStatCard },
       setup() {
         const statCards = [
-          { label: '数据 1', value: '240',    bg: '/images/cards/bg-purple.png', deco: '/images/cards/deco-purple.png', fallback: 'linear-gradient(135deg,#f0f0ff 0%,#dcdeff 100%)', icon: ElementPlusIconsVue.User },
-          { label: '数据 2', value: '233.5w', bg: '/images/cards/bg-yellow.png', deco: '/images/cards/deco-yellow.png', fallback: 'linear-gradient(135deg,#fffbf0 0%,#fff0c0 100%)', icon: ElementPlusIconsVue.Warning },
-          { label: '数据 3', value: '24',     bg: '/images/cards/bg-red.png',    deco: '/images/cards/deco-red.png',    fallback: 'linear-gradient(135deg,#fff5f5 0%,#ffd6d6 100%)', icon: ElementPlusIconsVue.Monitor },
-          { label: '数据 4', value: '12',     bg: '/images/cards/bg-green.png',  deco: '/images/cards/deco-green.png',  fallback: 'linear-gradient(135deg,#f0fdf9 0%,#c2f0e8 100%)', icon: ElementPlusIconsVue.Setting }
+          { label: '数据 1', value: '240',    bg: '../images/cards/bg-purple.png', deco: '../images/cards/deco-purple.png', fallback: 'linear-gradient(135deg,#f0f0ff 0%,#dcdeff 100%)', icon: ElementPlusIconsVue.User },
+          { label: '数据 2', value: '233.5w', bg: '../images/cards/bg-yellow.png', deco: '../images/cards/deco-yellow.png', fallback: 'linear-gradient(135deg,#fffbf0 0%,#fff0c0 100%)', icon: ElementPlusIconsVue.Warning },
+          { label: '数据 3', value: '24',     bg: '../images/cards/bg-red.png',    deco: '../images/cards/deco-red.png',    fallback: 'linear-gradient(135deg,#fff5f5 0%,#ffd6d6 100%)', icon: ElementPlusIconsVue.Monitor },
+          { label: '数据 4', value: '12',     bg: '../images/cards/bg-green.png',  deco: '../images/cards/deco-green.png',  fallback: 'linear-gradient(135deg,#f0fdf9 0%,#c2f0e8 100%)', icon: ElementPlusIconsVue.Setting }
         ]
         const actionCards = [
-          { id: 1, thumb: '/images/cards/action-1.png', title: '卡片名称一', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
-          { id: 2, thumb: '/images/cards/action-2.png', title: '卡片名称二', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
-          { id: 3, thumb: '/images/cards/action-3.png', title: '卡片名称三', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
-          { id: 4, thumb: '/images/cards/action-4.png', title: '卡片名称四', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' }
+          { id: 1, thumb: '../images/cards/action-1.png', title: '卡片名称一', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
+          { id: 2, thumb: '../images/cards/action-2.png', title: '卡片名称二', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
+          { id: 3, thumb: '../images/cards/action-3.png', title: '卡片名称三', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' },
+          { id: 4, thumb: '../images/cards/action-4.png', title: '卡片名称四', desc: '这里是卡片描述文字，支持展示两行内容，超出部分截断显示省略号。' }
         ]
         function handleCommand(cmd, cardId) {
           ElementPlus.ElMessage({ message: `卡片 ${cardId}：${cmd}`, type: 'info' })
