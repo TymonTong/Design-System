@@ -35,8 +35,9 @@ archive.pipe(output)
 archive.directory(path.join(root, 'public/images'), 'public/images')
 
 // ── 1. AI 规则 & 说明文档 ──────────────────────────────────────
-archive.file(path.join(root, '.cursorrules'), { name: '.cursorrules' })
-archive.file(path.join(root, 'README.md'),    { name: 'README.md' })
+archive.file(path.join(root, '.cursorrules'),   { name: '.cursorrules' })
+archive.file(path.join(root, 'README.md'),      { name: 'README.md' })
+archive.file(path.join(root, 'README-dev.md'),  { name: 'README-dev.md' })
 
 // ── 2. 主题样式 ────────────────────────────────────────────────
 archive.file(path.join(root, 'public/el-plus-theme.css'), { name: 'el-plus-theme.css' })
