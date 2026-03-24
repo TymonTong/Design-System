@@ -668,3 +668,21 @@
 }
 
 /* ── 表格操作列按钮间距由 gap 统一管理，无需此处手动补丁 ── */
+
+/* ================================================================
+   §  Form 表单 — label 高度
+   --el-form-item-label-height 变量在 El Plus CDN 版本中不会自动生效，
+   此处显式覆盖，引用 component-size 变量，三个尺寸同步联动。
+   ================================================================ */
+.el-form-item__label {
+  height: var(--el-component-size) !important;
+  line-height: var(--el-component-size) !important;
+}
+.el-form--large .el-form-item__label {
+  height: var(--el-component-size-large) !important;
+  line-height: var(--el-component-size-large) !important;
+}
+.el-form--small .el-form-item__label {
+  height: var(--el-component-size-small) !important;
+  line-height: var(--el-component-size-small) !important;
+}
